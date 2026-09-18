@@ -13,7 +13,8 @@
     "test": "npm run check",
     "audit:production": "node build.mjs --production-audit && node scripts/audit.mjs",
     "og": "node scripts/og.mjs",
-    "test:api": "node scripts/test-book-api.mjs"
+    "test:api": "node scripts/test-book-api.mjs",
+    "preview:static": "node build.mjs && node scripts/static-preview.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, cp, access } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, cp, access, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -168,6 +168,11 @@ function head(page, forceNoIndex = false) {
 <script type="application/ld+json">${schema(page)}</script>`;
 }
 
+// Clear the output first. Without this, a page removed from the route table —
+// or a draft rendered by an earlier PUBLISH_DRAFTS run — lingers in dist/ and
+// gets served locally, or published, long after it stopped being part of the
+// site. Vercel checks out fresh each build and so never showed this.
+await rm(out, {recursive:true, force:true});
 await mkdir(out, {recursive:true});
 await mkdir(reportDir, {recursive:true});
 if (await exists(path.join(root, 'public'))) await cp(path.join(root, 'public'), out, {recursive:true});
