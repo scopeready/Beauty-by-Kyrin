@@ -116,6 +116,8 @@ Relative luminance per WCAG 2.x: each channel `c = v/12.92` where `v ≤ 0.03928
 
 None of the above changes the visual character of the site. They are four scoped colour overrides. **This document does not change any code — these are findings only.**
 
+> **Cross-reference.** `ACCESSIBILITY.md` reports the same text ratios (8.31, 7.27, 5.60, 4.90, 6.20, 6.70, 7.10, 15.66, 16.60) and concludes "every pair passes AA". That is correct **for text**, and the two documents agree. The four items above are **WCAG 1.4.11 non-text contrast** — control boundaries and focus indicators — which that pass did not cover. They are additional findings, not a contradiction.
+
 ---
 
 ## 4. Spacing rhythm

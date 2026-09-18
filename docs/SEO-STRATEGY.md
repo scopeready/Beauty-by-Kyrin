@@ -239,7 +239,7 @@ Ordered by expected effect on appointment requests, not by effort. Items marked 
 | 2 | **BLOCKER.** Claim the practitioner Google Business Profile. See `LOCAL-SEO-GEO-PLAN.md` §2. | GBP outranks the whole website for "near me" and Maps intent. It is the highest-leverage single action in this project. |
 | 3 | Verify Google Search Console + Bing Webmaster Tools; submit the sitemap. | No query data exists otherwise, and there is no Ahrefs/Semrush fallback. |
 | 4 | Delete the redundant `beauty-by-kyrin-live` Vercel project and the root-level v1 leftovers (`robots.txt`, `index.html`, `404.html`, `sitemap.xml`, `llms.txt`, `llms-full.txt`). | Removes a duplicate-serving risk and a live edit-the-wrong-file trap. |
-| 5 | Submit a real end-to-end booking request and confirm it reaches Kyrin's inbox. | A lead form that silently fails is worse than no form. Untested as of writing. |
+| 5 | Submit a real end-to-end booking request and confirm it reaches Kyrin's inbox. | A lead form that silently fails is worse than no form. `scripts/test-book-api.mjs` stubs delivery and never touches the network, so real inbox delivery is untested as of writing. |
 
 ### Days 7–30 — fix what is measurably wrong, then fill the mapped gaps
 

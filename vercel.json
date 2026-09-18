@@ -5,6 +5,12 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "git": {
+    "//": "This work branch is pushed for safekeeping only. Vercel must not build it: the site is live on this repo, and a build here would spend a deployment and publish a preview nobody asked for. Remove this entry when the branch is ready to deploy for review. `main` is untouched and deploys as normal.",
+    "deploymentEnabled": {
+      "claude/sweet-gates-ybew9w": false
+    }
+  },
   "redirects": [
     { "source": "/contact", "destination": "/visit", "permanent": true },
     { "source": "/gallery", "destination": "/portfolio", "permanent": true },
