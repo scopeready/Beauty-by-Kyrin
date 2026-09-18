@@ -36,6 +36,9 @@ const businessId = absolute('/#business');
 const personId = absolute('/#kyrin');
 const websiteId = absolute('/#website');
 const ogImage = absolute('/assets/og-image.jpg');
+// Only verified facts reach the graph. An unverified value is omitted, never
+// guessed: a wrong coordinate or an invented licence is worse than an absent one.
+const sameAs = [site.instagram, site.tiktok, site.facebook, site.yelp, site.googleBusinessProfileUrl].filter(Boolean);
 const business = {
   '@type': 'HairSalon', '@id': businessId,
   name: site.name, url: absolute('/'), telephone: site.telephone, email: site.email,
@@ -43,8 +46,36 @@ const business = {
   image: [ogImage, absolute(site.portrait.src)],
   address: {'@type':'PostalAddress', streetAddress:site.address, addressLocality:site.locality, addressRegion:site.region, postalCode:site.postalCode, addressCountry:'US'},
   founder: {'@id':personId},
-  areaServed: {'@type':'City', name:'Las Vegas'},
+  employee: {'@id':personId},
+  areaServed: site.areasServed.map(name => ({'@type':'City', name})),
+  hasMap: site.maps,
+  // No price is published anywhere on this site, so priceRange is deliberately
+  // absent rather than a vague "$$" that is not backed by a real figure.
+  openingHoursSpecification: site.hours.map(block => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: block.days, opens: block.opens, closes: block.closes,
+  })),
 };
+if (site.latitude && site.longitude) {
+  business.geo = {'@type':'GeoCoordinates', latitude:site.latitude, longitude:site.longitude};
+}
+if (sameAs.length) business.sameAs = sameAs;
+
+const person = {
+  '@type':'Person', '@id':personId, name:site.person, jobTitle:site.jobTitle,
+  worksFor:{'@id':businessId}, url:absolute('/about'), image:absolute(site.portrait.src),
+  knowsAbout:['Balayage','Hair color','Highlights','Haircuts and styling','Hair extensions','Hair treatments'],
+};
+if (sameAs.length) person.sameAs = sameAs;
+// A2 is unfilled, so hasCredential is omitted entirely. Never invent a licence.
+if (site.license.display && site.license.number) {
+  person.hasCredential = {
+    '@type':'EducationalOccupationalCredential',
+    credentialCategory: site.license.type || 'Cosmetology license',
+    identifier: site.license.number,
+    recognizedBy: {'@type':'GovernmentOrganization', name:'Nevada State Board of Cosmetology'},
+  };
+}
 
 function breadcrumb(page) {
   if (page.path === '/') return null;
@@ -66,12 +97,25 @@ function schema(page) {
   const crumbs = breadcrumb(page);
   const webPage = {'@type':pageType, '@id':`${url}#webpage`, url, name:page.title, description:page.description, inLanguage:'en-US', isPartOf:{'@id':websiteId}, about:{'@id':businessId}, primaryImageOfPage:{'@type':'ImageObject', url:absolute(page.service?.image || page.guide?.image || '/assets/og-image.jpg')}};
   if (crumbs) webPage.breadcrumb = {'@id':crumbs['@id']};
-  const graph = [business, {'@type':'Person','@id':personId,name:site.person,jobTitle:'Hair stylist',worksFor:{'@id':businessId},url:absolute('/about'),image:absolute(site.portrait.src)}, {'@type':'WebSite','@id':websiteId,url:absolute('/'),name:site.name,inLanguage:'en-US',publisher:{'@id':businessId}}, webPage];
+  const graph = [business, person, {'@type':'WebSite','@id':websiteId,url:absolute('/'),name:site.name,inLanguage:'en-US',publisher:{'@id':businessId}}, webPage];
   if (crumbs) graph.push(crumbs);
   if (page.service) {
     const serviceId = `${url}#service`;
     graph.push({'@type':'Service','@id':serviceId,name:page.service.name || page.title.split('|')[0].trim(),serviceType:page.service.name,description:page.description,url,provider:{'@id':businessId},areaServed:{'@type':'City',name:'Las Vegas'}});
     webPage.mainEntity = {'@id':serviceId};
+  }
+  // FAQPage only where the answers are unique to that page. The home, visit and
+  // new-guest pages reuse entries from the general set, so marking them up too
+  // would publish the same Q&A at several URLs.
+  if (Array.isArray(page.faqs) && page.faqs.length) {
+    graph.push({
+      '@type': 'FAQPage', '@id': `${url}#faq`, url, inLanguage: 'en-US',
+      isPartOf: {'@id': websiteId},
+      mainEntity: page.faqs.map(item => ({
+        '@type': 'Question', name: item.q,
+        acceptedAnswer: {'@type': 'Answer', text: item.a},
+      })),
+    });
   }
   if (page.guide) {
     const articleId = `${url}#article`;
@@ -130,7 +174,16 @@ for (const page of pageList) {
 const notFound = {path:'/404',title:'Page not found | Beauty by Kyrin',description:'This page could not be found. Explore hair services or request an appointment with Beauty by Kyrin in Las Vegas.',type:'standard',className:'page-not-found',body:`<section class="page-hero"><div class="wrap"><p class="label">A little detour</p><h1>Let’s get you<br><em>back to beautiful.</em></h1><p class="lede">That page isn’t here. Your next great hair day still can be.</p><p><a class="button button-dark" href="/">Back to the homepage</a> <a class="text-link" href="/book">Request an appointment</a></p></div></section>`};
 await writeFile(path.join(out, '404.html'), render(notFound, true));
 await writeFile(path.join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${discoveryPages.map(page => `  <url><loc>${xml(absolute(page.path))}</loc></url>`).join('\n')}\n</urlset>\n`);
-await writeFile(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${absolute('/sitemap.xml')}\n`);
+// Answer engines are named explicitly. They are allowed by `User-agent: *`
+// anyway, but several operators read a named group as an affirmative signal,
+// and it documents the decision for whoever edits this next.
+const aiAgents = ['GPTBot','OAI-SearchBot','ChatGPT-User','ClaudeBot','Claude-User','PerplexityBot','Perplexity-User','Google-Extended','Bingbot','Applebot','Applebot-Extended','CCBot'];
+// Crawling always stays allowed, even for a preview. `Disallow: /` would stop a
+// crawler fetching the page at all, so it would never see the noindex meta tag —
+// and a URL blocked that way can still sit in an index with no content behind
+// it. Preview builds are kept out by the per-page noindex in head().
+await writeFile(path.join(out, 'robots.txt'),
+  `User-agent: *\nAllow: /\n\n${aiAgents.map(agent => `User-agent: ${agent}\nAllow: /`).join('\n\n')}\n\nSitemap: ${absolute('/sitemap.xml')}\n`);
 const facts = `${site.name} is the independent hair stylist business of ${site.person} in ${site.locality}, ${site.region}.\nLocation: ${site.location}, ${site.address}, ${site.locality}, ${site.region} ${site.postalCode}.\nPhone and text: ${site.phone}.\nAvailability: ${site.availability}\nAppointments are requests until Kyrin confirms a date and time. Pricing and service scope are discussed directly; no online payment is collected by this website.\n`;
 await writeFile(path.join(out, 'llms.txt'), `# ${site.name}\n\n${facts}\n## Website pages\n\n${discoveryPages.map(page => `- [${page.title}](${absolute(page.path)}): ${page.description}`).join('\n')}\n\n## Full reference\n\n- [Full website reference](${absolute('/llms-full.txt')})\n`);
 await writeFile(path.join(out, 'llms-full.txt'), `# ${site.name}: website reference\n\n${facts}\n${discoveryPages.map(page => `## ${page.title}\n\nURL: ${absolute(page.path)}\n\n${plain(page.body)}\n`).join('\n')}`);

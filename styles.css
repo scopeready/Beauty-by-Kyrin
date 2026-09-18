@@ -44,3 +44,40 @@
 .work-piece .work-image{object-position:center 75%}
 .lightbox-layout>img{object-fit:contain!important;object-position:center!important}
 @media(max-width:640px){.page-hero-photo.page-hero-portrait{width:100%;max-width:460px;margin-inline:auto}.portrait-composition{border-radius:150px 150px 0 0}.portrait-composition img{max-height:none}.portfolio-page .work-grid{row-gap:42px}.lightbox-layout>img{height:auto;max-height:42dvh}}
+
+/* Comparison tables, service "not for" panels and the service-area grid.
+   Comparison content is disproportionately cited by answer engines, so these
+   are real tables with real headers rather than styled divs. */
+.table-wrap{margin-top:38px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.compare{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:15px;line-height:1.55;min-width:540px}
+.compare caption{text-align:left;font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:18px}
+.compare th,.compare td{padding:15px 18px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.compare thead th{font-weight:600;color:var(--ink);border-bottom:1.5px solid var(--ink);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.compare tbody th{font-weight:500;color:var(--ink);width:26%}
+.compare td{color:var(--text)}
+.compare tbody tr:last-child th,.compare tbody tr:last-child td{border-bottom:none}
+.compare tbody tr:hover td,.compare tbody tr:hover th{background:rgba(237,131,174,.07)}
+
+.not-for h2 em{font-style:italic;color:var(--rose)}
+.not-for ul{list-style:none;margin:34px 0 0;padding:0;display:grid;gap:20px}
+.not-for li{position:relative;padding-left:34px;font-size:17px;line-height:1.62;color:var(--text)}
+.not-for li::before{content:"";position:absolute;left:0;top:11px;width:18px;height:1.5px;background:var(--rose)}
+
+.area-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px 5%;margin-top:52px}
+.area-grid article{border-top:1px solid var(--line);padding-top:20px}
+.area-grid h3{font-family:var(--display);font-size:24px;font-weight:500;margin:0 0 9px}
+.area-grid p{font-size:15px;line-height:1.62;color:var(--text);margin:0}
+
+@media(max-width:900px){
+  .area-grid{grid-template-columns:repeat(2,1fr);gap:28px 5%}
+}
+@media(max-width:640px){
+  .area-grid{grid-template-columns:1fr;gap:22px}
+  .compare{font-size:14px}
+  .compare th,.compare td{padding:12px 14px}
+  .not-for li{font-size:16px;padding-left:28px}
+  .table-wrap{margin-inline:calc(var(--gutter) * -0.5);padding-inline:calc(var(--gutter) * 0.5)}
+}
+
+/* <picture> must not become a layout box: the <img> stays the flex/grid item. */
+picture{display:contents}

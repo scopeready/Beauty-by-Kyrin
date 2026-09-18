@@ -19,6 +19,64 @@ export const services = [
       'You want to add brightness to brunette or blonde hair while keeping some depth and visual movement.',
       'You want to discuss a softer grow-out, while still making room for tone refreshes, trims and home care.'
     ],
+    notFor: [
+      'You need to cover grey consistently from the root — balayage deliberately leaves the root area alone, so a root-to-tip colour or a root touch-up is the better fit.',
+      'You want an exact match to a filtered photo. Balayage is hand-painted, so it varies slightly across a head of hair. That is the point of it, and it is also why it will not be identical to a reference.',
+      'You want to go several levels lighter in one sitting from dark, previously-coloured hair. That is colour correction work, and it needs its own conversation first.',
+    ],
+    compare: {
+          "heading": "Balayage or highlights?<br><em>They are not the same thing.</em>",
+          "intro": "This is the single most common mix-up in a colour consultation. Both add brightness; they get there differently, and they grow out differently. Neither is better — one of them is better for what you want.",
+          "caption": "Balayage compared with traditional foil highlights",
+          "columns": [
+                "",
+                "Balayage",
+                "Foil highlights"
+          ],
+          "rows": [
+                [
+                      "How it is applied",
+                      "Lightener painted on freehand, in sweeping sections",
+                      "Sections woven and wrapped in foil"
+                ],
+                [
+                      "Where the brightness starts",
+                      "Lower down, leaving the root area softer",
+                      "Can start right at the root"
+                ],
+                [
+                      "The effect",
+                      "Blended and graduated, more sun-lightened",
+                      "More uniform and evenly distributed"
+                ],
+                [
+                      "Lift achievable",
+                      "Gentler and more gradual per session",
+                      "Stronger, because foil holds heat"
+                ],
+                [
+                      "Grow-out",
+                      "Softer — there is no hard regrowth line",
+                      "A visible line as the root grows"
+                ],
+                [
+                      "Typical refresh",
+                      "Longer between appointments",
+                      "Sooner, especially on high contrast"
+                ],
+                [
+                      "Grey coverage",
+                      "Not designed for it",
+                      "Better, but a root colour is better still"
+                ],
+                [
+                      "Good if you want",
+                      "Low-maintenance dimension",
+                      "Brightness at the root, or even coverage"
+                ]
+          ],
+          "note": "Plenty of appointments use both — foils through the top for brightness where it shows, balayage through the lengths for blend. What suits you depends on your starting colour and how often you want to come back."
+    },
     approach: [
       {
         title: 'Start with the whole picture',
@@ -72,6 +130,11 @@ export const services = [
       'You want to change or refresh your overall shade and understand what the transition could involve.',
       'You want selected brightness or dimension without assuming every section of hair needs the same treatment.',
       'You have a color reference you love but need help translating its tone, contrast and placement to your own hair.'
+    ],
+    notFor: [
+      'You are hoping colour will fix damage. Colour can improve how hair looks, but it cannot rebuild it — if your ends are fragile, a treatment and a trim come before a colour change.',
+      'You want a dramatic change but cannot commit to the upkeep. High-contrast blonde and vivid tones need regular refreshing; if that does not fit your life, say so and the plan changes.',
+      'You need a same-day result with no consultation and no colour history. Box dye and old lightener behave unpredictably, and pretending otherwise is how hair gets damaged.',
     ],
     approach: [
       {
@@ -127,6 +190,10 @@ export const services = [
       'You are considering layers, a different perimeter or face-framing detail and want to understand the styling involved.',
       'You want a blowout or finished style and would like to talk through the look, occasion and other services you may need.'
     ],
+    notFor: [
+      'You want a cut copied exactly from a photo regardless of your hair type. Your density, texture and growth pattern decide how a shape falls — a good cut adapts the idea to your hair.',
+      'You are booking a style for an event and expect it to last several days. Styling is finished on the day; ask about a cut and a routine instead if you want it to hold week to week.',
+    ],
     approach: [
       {
         title: 'Talk about your everyday hair',
@@ -181,6 +248,67 @@ export const services = [
       'You are interested in more fullness and would like to discuss whether extensions are suitable for your hair.',
       'You want a clear picture of care, appointments and cost before deciding whether extensions fit your lifestyle.'
     ],
+    notFor: [
+      'Your hair is currently fragile, shedding, or recovering from a chemical service. Extensions add weight and tension, and fitting them to compromised hair makes the problem worse rather than hiding it.',
+      'You want extra length without the maintenance. Extensions are an ongoing commitment: move-ups, care and eventual replacement hair all continue after the first appointment.',
+      'You are deciding on price alone. The cheapest option is rarely the right method for your hair type, and the wrong method costs more in the long run.',
+    ],
+    compare: {
+          "heading": "Which extension method<br><em>suits your hair?</em>",
+          "intro": "Method matters more than length. The right one depends on your own hair’s density and condition, how you wear it, and how much upkeep you genuinely want — not on which is most popular.",
+          "caption": "Common professional extension methods compared",
+          "columns": [
+                "",
+                "Hand-tied wefts",
+                "Tape-in",
+                "K-tip / keratin bonds"
+          ],
+          "rows": [
+                [
+                      "How it attaches",
+                      "Wefts sewn onto a beaded row",
+                      "Adhesive wefts sandwiching your hair",
+                      "Individual keratin-bonded strands"
+                ],
+                [
+                      "Best suited to",
+                      "Medium to thick hair",
+                      "Fine to medium hair",
+                      "Most hair types, including finer"
+                ],
+                [
+                      "Lies flattest",
+                      "Good, in the right hands",
+                      "Flattest of the three",
+                      "Very natural, strand by strand"
+                ],
+                [
+                      "Typical move-up",
+                      "Every 7–10 weeks",
+                      "Every 6–8 weeks",
+                      "Every 3–4 months"
+                ],
+                [
+                      "Fitting time",
+                      "Longer",
+                      "Shortest",
+                      "Longest"
+                ],
+                [
+                      "Reusable hair",
+                      "Usually",
+                      "Sometimes, retaped",
+                      "Bonds are replaced"
+                ],
+                [
+                      "Watch out for",
+                      "Weight on finer hair",
+                      "Adhesive and oil-based products",
+                      "Careful removal matters"
+                ]
+          ],
+          "note": "You will find confident claims online that one method is always right for fine hair. It is not that simple — density, scalp condition and how you style day to day all change the answer. This is a consultation question, not a checkout question."
+    },
     approach: [
       {
         title: 'Name the result you want',
@@ -234,6 +362,10 @@ export const services = [
       'You would like to discuss the feel and manageability of your hair and whether a conditioning service is appropriate.',
       'You are considering a keratin service and want the product, process, expected finish and aftercare explained before deciding.',
       'You want to ask about cosmetic scalp care and understand which salon services are available for your concerns.'
+    ],
+    notFor: [
+      'You expect a single treatment to reverse serious damage. A treatment improves condition and buys time; hair that is genuinely broken needs to be cut off as it grows out.',
+      'You want a permanent fix. Bonding and conditioning treatments are cumulative and temporary — they work as part of a routine, not as a one-off rescue.',
     ],
     approach: [
       {

@@ -2,7 +2,9 @@ import { readFile, access, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runInNewContext } from 'node:vm';
-import { site, portfolio } from './site-config.mjs';
+import { site, portfolio, testimonials } from './site-config.mjs';
+
+const SAME_AS = [site.instagram, site.tiktok, site.facebook, site.yelp, site.googleBusinessProfileUrl].filter(Boolean);
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const productionAudit = process.argv.includes('--production-audit');
@@ -93,7 +95,15 @@ for (const [route, html] of files) {
     function inspect(value, key = '') {
       if (!value || typeof value !== 'object') return;
       for (const [name, item] of Object.entries(value)) {
-        check(!['aggregateRating','review','openingHoursSpecification','geo','sameAs'].includes(name), `${route}: unverified schema property ${name}`);
+        // Properties that must never appear without the evidence behind them.
+        // aggregateRating/review stay blocked outright: there are no real,
+        // attributable reviews yet, and inventing them breaks FTC rules.
+        // geo and sameAs are gated on their config actually being filled in, so
+        // an empty value can never reach the page as a guess.
+        check(!['aggregateRating','review'].includes(name), `${route}: unverified schema property ${name}`);
+        check(name !== 'geo' || Boolean(site.latitude && site.longitude), `${route}: geo published without verified coordinates`);
+        check(name !== 'sameAs' || SAME_AS.length > 0, `${route}: sameAs published without verified profiles`);
+        check(name !== 'hasCredential' || Boolean(site.license.display && site.license.number), `${route}: hasCredential published without a verified licence`);
         if (name === '@type') check(![item].flat().some(type => ['Review','AggregateRating'].includes(type)), `${route}: self-serving review schema`);
         if (['@id','url','contentUrl','thumbnailUrl','image','item','mainEntityOfPage'].includes(name)) {
           for (const candidate of [item].flat().filter(entry => typeof entry === 'string')) {
@@ -222,9 +232,9 @@ const inspirationEnd = interactionCode.indexOf("form.addEventListener('submit'",
 check(inspirationStart >= 0 && inspirationEnd > inspirationStart,'Booking inspiration setup was not found for the interaction regression');
 if (inspirationStart >= 0 && inspirationEnd > inspirationStart) for (const photo of portfolio) {
   const fields = {'#service':{options:[]},'[data-inspiration]':{value:''},'[data-inspiration-url]':{value:''},'[data-selected-inspiration]':{hidden:true,textContent:''}};
-  const form = {dataset:{lookOptions:JSON.stringify(lookOptions)},querySelector:selector => fields[selector]};
+  const form = {dataset:{lookOptions:JSON.stringify(lookOptions)},querySelector:selector => fields[selector],querySelectorAll:() => [],addEventListener(){}};
   try {
-    runInNewContext(interactionCode.slice(inspirationStart,inspirationEnd),{form,status:{},location:{origin:manifest.origin,search:`?look=${encodeURIComponent(photo.id)}`},URL,URLSearchParams},{timeout:1000});
+    runInNewContext(interactionCode.slice(inspirationStart,inspirationEnd),{form,status:{},location:{origin:manifest.origin,search:`?look=${encodeURIComponent(photo.id)}`,pathname:'/book'},document:{referrer:''},track(){},URL,URLSearchParams},{timeout:1000});
     check(fields['[data-inspiration]'].value === lookOptions[photo.id], `Booking changes the exact inspiration description for ${photo.id}`);
     check(fields['[data-inspiration-url]'].value === `${manifest.origin}/portfolio#${photo.id}`, `Booking loses the selected photograph URL for ${photo.id}`);
     check(fields['[data-selected-inspiration]'].hidden === false && fields['[data-selected-inspiration]'].textContent.includes(lookOptions[photo.id]), `Booking does not display selected inspiration for ${photo.id}`);

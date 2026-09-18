@@ -1,6 +1,26 @@
 (() => {
   'use strict';
   document.documentElement.classList.add('js');
+
+  // Analytics. No-ops entirely until a real measurement ID is configured —
+  // nothing is queued, nothing is sent, and no personal detail is ever a param.
+  const track = (event, params) => {
+    try { if (typeof window.gtag === 'function') window.gtag('event', event, params || {}); }
+    catch { /* analytics must never break the page */ }
+  };
+  const closest = (target, selector) => target instanceof Element ? target.closest(selector) : null;
+  document.addEventListener('click', e => {
+    const link = closest(e.target, 'a[href]');
+    if (!link) return;
+    const href = link.getAttribute('href') || '';
+    if (href.startsWith('tel:')) track('call_click');
+    else if (href.startsWith('sms:')) track('text_click');
+    else if (href.startsWith('/book') || link.classList.contains('nav-book')) track('book_click', { location: link.className || 'link' });
+    else if (href.includes('google.com/maps')) track('directions_click');
+    else if (href.includes('instagram.com')) track('instagram_click');
+    else if (href.startsWith('/services/')) track('service_view', { service: href.replace('/services/', '') });
+  }, { passive: true });
+
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const header = document.querySelector('[data-header]');
   const toggle = document.querySelector('.menu-toggle');
@@ -106,6 +126,12 @@
     const chosen=Object.hasOwn(looks,requestedLook)?looks[requestedLook]:null;
     if(chosen){form.querySelector('[data-inspiration]').value=chosen;form.querySelector('[data-inspiration-url]').value=new URL('/portfolio#'+encodeURIComponent(requestedLook),location.origin).href;const box=form.querySelector('[data-selected-inspiration]');box.hidden=false;box.textContent='Your inspiration: '+chosen;}
     if(params.get('sent')==='1'){status.className='form-status is-success';status.textContent='Your request has been sent. Your appointment is not confirmed until Kyrin replies and a date and time are agreed.';}
+    const started=form.querySelector('[data-form-started]');if(started)started.value=String(Date.now());
+    form.addEventListener('focusin',()=>track('appointment_form_start'),{once:true});
+    const sourcePage=form.querySelector('[data-source-page]');if(sourcePage)sourcePage.value=(document.referrer&&document.referrer.startsWith(location.origin)?new URL(document.referrer).pathname:location.pathname)+location.search;
+    form.querySelectorAll('[data-utm]').forEach(f=>{const v=params.get(f.dataset.utm);if(v)f.value=v.slice(0,150);});
+    const serverError=params.get('error');
+    if(serverError){status.className='form-status is-error';status.textContent=serverError==='rate'?'We already have a recent request from you. Please text or call 702-533-8176 if it is urgent.':serverError==='validation'?'Please check the highlighted fields and try again.':'We could not send your request. Please try again, or text or call 702-533-8176.';}
     form.addEventListener('submit',async e=>{
       e.preventDefault();
       if(form.dataset.sending==='true')return;
@@ -118,12 +144,18 @@
       form.dataset.sending='true';button.disabled=true;buttonLabel.textContent='Sending your request…';status.textContent='Sending your request to Kyrin.';
       const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),20000);
       try{
-        const body=new FormData(form);body.delete('redirect');
+        const body=new FormData(form);
         const response=await fetch(form.action,{method:'POST',body,headers:{Accept:'application/json'},signal:controller.signal});
-        const result=await response.json();if(!response.ok||!result.success)throw new Error('Unable to send');
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok||!result.ok){
+          if(result.errors){Object.entries(result.errors).forEach(([name,text])=>{const field=form.elements[name];if(!field)return;field.setAttribute('aria-invalid','true');const fieldError=form.querySelector('#'+field.id+'-error');if(fieldError)fieldError.textContent=text;});}
+          throw new Error(result.error||'Unable to send');
+        }
         form.reset();form.querySelector('[data-selected-inspiration]').hidden=true;form.querySelector('[data-inspiration]').value='';form.querySelector('[data-inspiration-url]').value='';
+        if(started)started.value=String(Date.now());
+        track('appointment_form_submit');
         status.classList.add('is-success');status.textContent='Your request has been sent. Your appointment is not confirmed until Kyrin replies and a date and time are agreed.';
-      }catch(error){status.classList.add('is-error');status.textContent=error.name==='AbortError'?'The request timed out, so we could not confirm delivery. Please text or call 702-533-8176 before sending again.':'We could not send your request. Your details are still here. Please try again, or text or call 702-533-8176.';}
+      }catch(error){status.classList.add('is-error');status.textContent=error.name==='AbortError'?'The request timed out, so we could not confirm delivery. Please text or call 702-533-8176 before sending again.':(error.message&&error.message!=='Unable to send'?error.message:'We could not send your request. Your details are still here. Please try again, or text or call 702-533-8176.');}
       finally{clearTimeout(timeout);form.dataset.sending='false';button.disabled=false;buttonLabel.textContent='Send my request';}
     });
   }
