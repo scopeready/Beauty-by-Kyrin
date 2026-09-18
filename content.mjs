@@ -20,13 +20,13 @@ export const services = [
       'You want to discuss a softer grow-out, while still making room for tone refreshes, trims and home care.'
     ],
     notFor: [
-      'You need to cover grey consistently from the root — balayage deliberately leaves the root area alone, so a root-to-tip colour or a root touch-up is the better fit.',
+      'You need to cover grey consistently from the root — balayage deliberately leaves the root area alone, so a root-to-tip color or a root touch-up is the better fit.',
       'You want an exact match to a filtered photo. Balayage is hand-painted, so it varies slightly across a head of hair. That is the point of it, and it is also why it will not be identical to a reference.',
-      'You want to go several levels lighter in one sitting from dark, previously-coloured hair. That is colour correction work, and it needs its own conversation first.',
+      'You want to go several levels lighter in one sitting from dark, previously-colored hair. That is color correction work, and it needs its own conversation first.',
     ],
     compare: {
           "heading": "Balayage or highlights?<br><em>They are not the same thing.</em>",
-          "intro": "This is the single most common mix-up in a colour consultation. Both add brightness; they get there differently, and they grow out differently. Neither is better — one of them is better for what you want.",
+          "intro": "This is the single most common mix-up in a color consultation. Both add brightness; they get there differently, and they grow out differently. Neither is better — one of them is better for what you want.",
           "caption": "Balayage compared with traditional foil highlights",
           "columns": [
                 "",
@@ -67,7 +67,7 @@ export const services = [
                 [
                       "Grey coverage",
                       "Not designed for it",
-                      "Better, but a root colour is better still"
+                      "Better, but a root color is better still"
                 ],
                 [
                       "Good if you want",
@@ -75,7 +75,7 @@ export const services = [
                       "Brightness at the root, or even coverage"
                 ]
           ],
-          "note": "Plenty of appointments use both — foils through the top for brightness where it shows, balayage through the lengths for blend. What suits you depends on your starting colour and how often you want to come back."
+          "note": "Plenty of appointments use both — foils through the top for brightness where it shows, balayage through the lengths for blend. What suits you depends on your starting color and how often you want to come back."
     },
     approach: [
       {
@@ -132,9 +132,9 @@ export const services = [
       'You have a color reference you love but need help translating its tone, contrast and placement to your own hair.'
     ],
     notFor: [
-      'You are hoping colour will fix damage. Colour can improve how hair looks, but it cannot rebuild it — if your ends are fragile, a treatment and a trim come before a colour change.',
+      'You are hoping color will fix damage. Color can improve how hair looks, but it cannot rebuild it — if your ends are fragile, a treatment and a trim come before a color change.',
       'You want a dramatic change but cannot commit to the upkeep. High-contrast blonde and vivid tones need regular refreshing; if that does not fit your life, say so and the plan changes.',
-      'You need a same-day result with no consultation and no colour history. Box dye and old lightener behave unpredictably, and pretending otherwise is how hair gets damaged.',
+      'You need a same-day result with no consultation and no color history. Box dye and old lightener behave unpredictably, and pretending otherwise is how hair gets damaged.',
     ],
     approach: [
       {
@@ -409,7 +409,7 @@ export const services = [
 
 import { newGuides } from './content-guides-drafts.mjs';
 
-// Drafts written for Kyrin to personalise before they carry her byline. They are
+// Drafts written for Kyrin to personalize before they carry her byline. They are
 // excluded from the built site — no URL, no sitemap entry, no listing — until
 // she has reviewed each one and the flag is removed. Set PUBLISH_DRAFTS=true to
 // render them on a preview deployment so she can read them in place.

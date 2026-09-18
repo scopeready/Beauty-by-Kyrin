@@ -261,6 +261,16 @@ const stylesheet = await readFile(path.join(dist,'styles.css'),'utf8');
 for (const match of stylesheet.matchAll(/url\(\s*["']?([^)'"\s]+)["']?\s*\)/g)) await localReference(match[1], '/', 'CSS asset');
 const webmanifest = JSON.parse(await readFile(path.join(dist,'site.webmanifest'),'utf8'));
 for (const icon of webmanifest.icons || []) await localReference(icon.src, '/', 'manifest icon');
+// This is a US business writing for US readers, and the site settled on
+// American spellings early. Mixed spellings shipped to production once, in copy
+// added later, and read as careless on a page selling attention to detail.
+const BRITISH = /\b(colour\w*|neighbourhood|personalise\w*|organise\w*|recognise\w*|favourite|behaviour|analyse\w*|jewellery|enrolment)\b/gi;
+for (const page of manifest.pages) {
+  const html = await readFile(path.join(dist, page.file), 'utf8');
+  const hits = [...new Set((html.match(BRITISH) || []).map(word => word.toLowerCase()))];
+  check(hits.length === 0, `${page.path}: British spelling on a US site: ${hits.join(', ')}`);
+}
+
 if (productionAudit) {
   check(manifest.indexable === true, 'Production audit did not enable public-page indexing');
   check(manifest.origin === 'https://www.beautybykyrin.com', 'Production audit canonical origin mismatch');
