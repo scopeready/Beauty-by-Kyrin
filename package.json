@@ -11,13 +11,15 @@
     "verify": "node verify.mjs",
     "check": "node --check script.js && node --check templates.mjs && npm run typecheck && node build.mjs && node verify.mjs",
     "test": "npm run check",
-    "audit:production": "node build.mjs --production-audit && node scripts/audit.mjs"
+    "audit:production": "node build.mjs --production-audit && node scripts/audit.mjs",
+    "og": "node scripts/og.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
     "@types/node": "^24.10.2",
+    "playwright": "^1.63.0",
     "typescript": "^5.9.3"
   }
 }

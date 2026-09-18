@@ -1,5 +1,10 @@
 import { site, portfolio, generalFaqs, policies } from './site-config.mjs';
-import { services, guides } from './content.mjs';
+import { services, guides as allGuides } from './content.mjs';
+
+// A draft never carries Kyrin's byline in public. Drafts are dropped from the
+// page set, the journal listing, the sitemap and llms.txt alike — setting
+// PUBLISH_DRAFTS=true on a preview is the only way to see them.
+const guides = process.env.PUBLISH_DRAFTS === 'true' ? allGuides : allGuides.filter(guide => !guide.draft);
 export const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arrow = '<span aria-hidden="true">↗</span>';
 const button = (text, href='/book', style='primary') => `<a class="button button-${style}" href="${esc(href)}">${esc(text)}${arrow}</a>`;

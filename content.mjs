@@ -407,6 +407,14 @@ export const services = [
   }
 ];
 
+import { newGuides } from './content-guides-drafts.mjs';
+
+// Drafts written for Kyrin to personalise before they carry her byline. They are
+// excluded from the built site — no URL, no sitemap entry, no listing — until
+// she has reviewed each one and the flag is removed. Set PUBLISH_DRAFTS=true to
+// render them on a preview deployment so she can read them in place.
+const drafts = newGuides.map(guide => ({ ...guide, draft: true }));
+
 export const guides = [
   {
     slug: 'balayage-vs-highlights',
@@ -622,3 +630,5 @@ export const guides = [
     ]
   }
 ];
+
+guides.push(...drafts);

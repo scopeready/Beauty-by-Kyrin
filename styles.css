@@ -81,3 +81,9 @@
 
 /* <picture> must not become a layout box: the <img> stays the flex/grid item. */
 picture{display:contents}
+
+/* WCAG 2.2 AA 2.5.8 Target Size (Minimum). These two are standalone controls
+   rather than links inside a sentence, so the inline exception does not apply
+   and they need to reach 24px of hit area. */
+.footer-bottom a{display:inline-flex;align-items:center;min-height:24px}
+.booking-email{display:inline-flex;align-items:center;min-height:24px}

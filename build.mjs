@@ -125,8 +125,21 @@ function schema(page) {
   return JSON.stringify({'@context':'https://schema.org','@graph':graph}).replace(/</g, '\\u003c');
 }
 
+// One branded social card per page type, rendered by scripts/og.mjs.
+function socialImage(page) {
+  const route = page.path;
+  if (route === '/') return absolute('/assets/og/home.jpg');
+  if (route === '/portfolio') return absolute('/assets/og/portfolio.jpg');
+  if (route === '/about') return absolute('/assets/og/about.jpg');
+  if (route === '/book' || route === '/thank-you') return absolute('/assets/og/book.jpg');
+  if (route.startsWith('/journal')) return absolute('/assets/og/journal.jpg');
+  if (route.startsWith('/services')) return absolute('/assets/og/services.jpg');
+  return absolute('/assets/og/home.jpg');
+}
+
 function head(page, forceNoIndex = false) {
   const url = absolute(page.path);
+  const social = socialImage(page);
   const robots = site.indexable && page.noindex !== true && !forceNoIndex ? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1' : 'noindex,follow';
   return `<title>${esc(page.title)}</title>
 <meta name="description" content="${esc(page.description)}">
@@ -139,14 +152,14 @@ function head(page, forceNoIndex = false) {
 <meta property="og:title" content="${esc(page.title)}">
 <meta property="og:description" content="${esc(page.description)}">
 <meta property="og:url" content="${esc(url)}">
-<meta property="og:image" content="${esc(ogImage)}">
+<meta property="og:image" content="${esc(social)}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Beauty by Kyrin, personalized hair styling in Las Vegas">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(page.title)}">
 <meta name="twitter:description" content="${esc(page.description)}">
-<meta name="twitter:image" content="${esc(ogImage)}">
+<meta name="twitter:image" content="${esc(social)}">
 <meta name="twitter:image:alt" content="Beauty by Kyrin, personalized hair styling in Las Vegas">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
