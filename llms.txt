@@ -1,19 +1,32 @@
 # Beauty by Kyrin
 
-Beauty by Kyrin is a Las Vegas hair stylist specializing in custom cuts, dimensional color, balayage, highlights, extensions, blowouts, keratin services, deep conditioning, and scalp care.
+Beauty by Kyrin is the independent hair stylist business of Kyrin Weidauer in Las Vegas, NV.
+Location: Inside Venus Salon, 8665 W Flamingo Rd, Suite 128, Las Vegas, NV 89147.
+Phone and text: 702-533-8176.
+Availability: By appointment. Contact Kyrin for availability.
+Appointments are requests until Kyrin confirms a date and time. Pricing and service scope are discussed directly; no online payment is collected by this website.
 
-## Contact
+## Website pages
 
-- Stylist: Kyrin Weidauer
-- Phone or text: 702-533-8176
-- Location: Inside Venus Salon, 8665 W Flamingo Rd, Las Vegas, NV 89147
-- Website: https://www.beautybykyrin.com/
-- Hours: Tuesday to Saturday, 9:00 AM to 6:00 PM
+- [Beauty by Kyrin | Las Vegas Hair Stylist & Color](https://beauty-by-kyrin-live.vercel.app/): Discover personal hair artistry in Las Vegas. Explore balayage, dimensional color, custom cuts and extensions with Kyrin inside Venus Salon. Request a visit.
+- [Hair Services in Las Vegas | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/services): Explore balayage, color, highlights, haircuts, styling, extensions and treatments at Beauty by Kyrin in Las Vegas. Find your service and request a consultation.
+- [Balayage in Las Vegas | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/services/balayage): Explore balayage in Las Vegas with Beauty by Kyrin. Plan soft dimension, face-framing brightness and a maintenance routine around your hair and lifestyle.
+- [Hair Color & Highlights in Las Vegas | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/services/color-and-highlights): Discover hair color and highlights in Las Vegas with Beauty by Kyrin. Explore tone, brightness and dimension with a consultation for your next color appointment.
+- [Haircuts & Styling in Las Vegas | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/services/haircuts-and-styling): Explore haircuts, styling and blowouts in Las Vegas with Beauty by Kyrin. Discuss shape, length and a finish that fits how you wear your hair every day.
+- [Hair Extensions in Las Vegas | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/services/hair-extensions): Consider hair extensions in Las Vegas with Beauty by Kyrin. Discuss length, fullness, blending, care and the full commitment before choosing your extension plan.
+- [Hair Treatments in Las Vegas | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/services/hair-treatments): Explore deep conditioning, keratin services and scalp care in Las Vegas with Beauty by Kyrin. Discuss your hair concerns and a treatment plan before booking.
+- [Hair Color & Cut Portfolio | Beauty by Kyrin Las Vegas](https://beauty-by-kyrin-live.vercel.app/portfolio): Explore real photographs of dimensional blonde, brunette color and layered cuts from Kyrin’s portfolio. Find inspiration for your next Las Vegas appointment.
+- [Meet Kyrin Weidauer | Las Vegas Hair Stylist](https://beauty-by-kyrin-live.vercel.app/about): Meet Kyrin Weidauer, the stylist behind Beauty by Kyrin in Las Vegas. Discover a personal approach to hair color, cuts, extensions and your first consultation.
+- [Your First Hair Appointment | Beauty by Kyrin Las Vegas](https://beauty-by-kyrin-live.vercel.app/new-guests): New to Beauty by Kyrin? Learn what to bring, what to discuss and how your Las Vegas hair consultation works. Start with your goals, routine and inspiration.
+- [Visit Beauty by Kyrin | Venus Salon, Las Vegas](https://beauty-by-kyrin-live.vercel.app/visit): Find Beauty by Kyrin inside Venus Salon at 8665 W Flamingo Rd, Suite 128, Las Vegas. Get directions, contact Kyrin and plan your appointment near Flamingo and Durango.
+- [Request a Hair Appointment | Beauty by Kyrin Las Vegas](https://beauty-by-kyrin-live.vercel.app/book): Ready for your next look? Request an appointment with Kyrin in Las Vegas for color, balayage, cuts or extensions. Share your hair goals or call 702-533-8176.
+- [Hair Appointment Questions | Beauty by Kyrin Las Vegas](https://beauty-by-kyrin-live.vercel.app/faq): Get answers about booking, consultations, pricing, color preparation and visiting Beauty by Kyrin inside Venus Salon in Las Vegas. Plan your next hair appointment.
+- [The Hair Journal | Beauty by Kyrin Las Vegas](https://beauty-by-kyrin-live.vercel.app/journal): Plan your next hair change with clear guides to balayage, highlights, color consultations and extensions from the Beauty by Kyrin hair journal in Las Vegas.
+- [Balayage vs. Highlights: How to Choose Your Color | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/journal/balayage-vs-highlights): Compare balayage and highlights by placement, brightness, grow-out and upkeep. Use this practical guide to prepare for a color consultation in Las Vegas.
+- [How to Prepare for a Hair Color Consultation | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/journal/prepare-for-hair-color): Prepare for your hair color consultation with useful photos, an honest color history and questions about cost, upkeep and the result you want to achieve.
+- [What to Ask at a Hair Extensions Consultation | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/journal/hair-extensions-consultation): Explore the questions to ask before hair extensions: suitability, blending, method, care, maintenance and the full cost of your proposed extension plan.
+- [Privacy | Beauty by Kyrin](https://beauty-by-kyrin-live.vercel.app/privacy): Learn how Beauty by Kyrin handles appointment request information and which services help deliver this website, its fonts and the contact form.
 
-## Booking
+## Full reference
 
-Clients can call or text 702-533-8176 or send an appointment request at https://www.beautybykyrin.com/#book.
-
-## Service area
-
-Beauty by Kyrin serves Las Vegas and nearby communities including Henderson, North Las Vegas, Summerlin, Spring Valley, and Enterprise.
+- [Full website reference](https://beauty-by-kyrin-live.vercel.app/llms-full.txt)

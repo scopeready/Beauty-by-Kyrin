@@ -1,11 +1,12 @@
 {
   "name": "beauty-by-kyrin",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Beauty by Kyrin salon website",
   "scripts": {
-    "dev": "node scripts/serve.mjs",
-    "check": "node --check script.js && node scripts/audit.mjs"
+    "build": "node build.mjs",
+    "dev": "node build.mjs && node server.mjs",
+    "check": "node --check script.js && node --check templates.mjs && node build.mjs && node verify.mjs"
   },
   "engines": {
     "node": ">=20"

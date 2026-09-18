@@ -1,194 +1,129 @@
 (() => {
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const header = document.querySelector("[data-header]");
-  const menuToggle = document.querySelector(".menu-toggle");
-  const navLinks = document.querySelectorAll(".site-nav a");
+  'use strict';
+  document.documentElement.classList.add('js');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const header = document.querySelector('[data-header]');
+  const toggle = document.querySelector('.menu-toggle');
+  const closeMenu = () => { header?.classList.remove('menu-open'); toggle?.setAttribute('aria-expanded','false'); };
+  toggle?.addEventListener('click', () => { const open = header.classList.toggle('menu-open'); toggle.setAttribute('aria-expanded',String(open)); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && header?.classList.contains('menu-open')) { closeMenu(); toggle.focus(); } });
+  document.addEventListener('click', e => { if(header && !header.contains(e.target)) closeMenu(); });
+  document.querySelectorAll('.site-nav a').forEach(a => a.addEventListener('click',closeMenu));
+  matchMedia('(min-width: 641px)').addEventListener('change',closeMenu);
 
-  const setHeaderState = () => {
-    header?.classList.toggle("is-scrolled", window.scrollY > 24);
-  };
-
-  setHeaderState();
-  window.addEventListener("scroll", setHeaderState, { passive: true });
-
-  menuToggle?.addEventListener("click", () => {
-    const open = header?.classList.toggle("menu-open") ?? false;
-    menuToggle.setAttribute("aria-expanded", String(open));
+  if('IntersectionObserver' in window && !reduced.matches) {
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if(entry.isIntersecting){entry.target.classList.add('reveal-now');observer.unobserve(entry.target);}
+    }),{threshold:.12});
+    document.querySelectorAll('.section-title,.meet-copy,.intro-grid>div,.work-piece,.principle-grid article,.guest-steps li').forEach(e => observer.observe(e));
+  }
+  const preview = document.querySelector('.service-preview img');
+  document.querySelectorAll('[data-service-image]').forEach(link => {
+    const swap = () => { if(preview && preview.getAttribute('src') !== link.dataset.serviceImage){preview.src=link.dataset.serviceImage;preview.alt=link.dataset.serviceAlt;} };
+    link.addEventListener('pointerenter',swap);link.addEventListener('focus',swap);
   });
 
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      header?.classList.remove("menu-open");
-      menuToggle?.setAttribute("aria-expanded", "false");
-    });
-  });
-
-  const setupScrollJourney = () => {
-    if (reducedMotion.matches) return () => {};
-
-    const journey = document.querySelector("[data-scroll-journey]");
-    const media = journey?.querySelector(".journey-media");
-    const video = journey?.querySelector(".journey-video");
-    if (!journey || !media || !video) return () => {};
-
+  // Film is decorative and fetched only near its section. No scroll interception.
+  const film = document.querySelector('[data-scroll-film]');
+  let stopFilm = () => {};
+  const setupFilm = () => {
+    if(!film || reduced.matches || navigator.connection?.saveData) return () => {};
+    const video = film.querySelector('video');
+    const media = film.querySelector('.film-media');
+    const bar = film.querySelector('.film-progress');
     const controller = new AbortController();
-    const useMobile = window.matchMedia("(max-width: 720px)").matches;
-    const source = useMobile
-      ? video.dataset.mobileSrc
-      : video.dataset.desktopSrc;
-    if (useMobile && video.dataset.mobilePoster) {
-      video.poster = video.dataset.mobilePoster;
-      const poster = journey.querySelector(".journey-poster");
-      if (poster?.dataset.mobilePoster) poster.src = poster.dataset.mobilePoster;
-    }
-    let blobUrl = "";
-    let duration = 0;
-    let frame = 0;
-    let requestedTime = 0;
-    let painted = false;
-
-    const progress = () => {
-      const rect = journey.getBoundingClientRect();
-      const range = Math.max(1, journey.offsetHeight - window.innerHeight);
-      return Math.min(1, Math.max(0, -rect.top / range));
+    let loaded=false,blob='',duration=0,raf=0,target=0;
+    const paint=()=>{
+      raf=0;
+      const range=Math.max(1,film.offsetHeight-video.parentElement.offsetHeight);
+      target=Math.max(0,Math.min(1,(88-film.getBoundingClientRect().top)/range));
+      bar?.style.setProperty('--progress',target);
+      if(duration && video.readyState>=2 && !video.seeking && Math.abs(video.currentTime-target*duration)>.05) video.currentTime=Math.min(Math.max(0,duration-.04),target*duration);
     };
-
-    const paint = () => {
-      frame = 0;
-      if (!duration || video.readyState < 2) return;
-      const next = requestedTime * duration;
-      if (Math.abs(video.currentTime - next) > 0.045) video.currentTime = next;
+    const request=()=>{if(!raf)raf=requestAnimationFrame(paint);};
+    const ready=()=>{duration=Number.isFinite(video.duration)?video.duration:0;media.classList.add('is-ready');request();};
+    const load=async()=>{
+      if(loaded)return;loaded=true;
+      const mobile=matchMedia('(max-width: 640px)').matches;
+      try{const response=await fetch(mobile?video.dataset.mobileSrc:video.dataset.desktopSrc,{signal:controller.signal});if(!response.ok)throw new Error('Media unavailable');blob=URL.createObjectURL(await response.blob());video.src=blob;video.load();}catch(error){if(error.name!=='AbortError') media.classList.remove('is-ready');}
     };
-
-    const requestPaint = () => {
-      requestedTime = progress();
-      if (!frame) frame = window.requestAnimationFrame(paint);
-    };
-
-    const markPainted = () => {
-      if (painted) return;
-      painted = true;
-      media.classList.add("is-video-ready");
-    };
-
-    const loadVideo = async () => {
-      if (!source) return;
-      try {
-        const response = await fetch(source, { signal: controller.signal });
-        if (!response.ok) throw new Error(`Video request failed: ${response.status}`);
-        const blob = await response.blob();
-        blobUrl = URL.createObjectURL(blob);
-        video.src = blobUrl;
-        video.load();
-      } catch (error) {
-        if (error.name !== "AbortError") console.warn("Hero film unavailable; poster remains visible.");
-      }
-    };
-
-    video.addEventListener("loadedmetadata", () => {
-      duration = Number.isFinite(video.duration) ? video.duration : 0;
-      requestPaint();
-    });
-    video.addEventListener("loadeddata", markPainted, { once: true });
-    video.addEventListener("seeked", markPainted, { once: true });
-    window.addEventListener("scroll", requestPaint, { passive: true });
-    window.addEventListener("resize", requestPaint, { passive: true });
-    loadVideo();
-
-    return () => {
-      controller.abort();
-      window.removeEventListener("scroll", requestPaint);
-      window.removeEventListener("resize", requestPaint);
-      if (frame) window.cancelAnimationFrame(frame);
-      video.removeAttribute("src");
-      video.load();
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
-    };
+    const observe = 'IntersectionObserver' in window ? new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){load();observe.disconnect();}},{rootMargin:'350px'}) : null;
+    if(observe)observe.observe(film);else load();
+    video.addEventListener('loadeddata',ready);video.addEventListener('seeked',request);
+    window.addEventListener('scroll',request,{passive:true});window.addEventListener('resize',request,{passive:true});request();
+    return ()=>{controller.abort();observe?.disconnect();cancelAnimationFrame(raf);window.removeEventListener('scroll',request);window.removeEventListener('resize',request);video.removeEventListener('loadeddata',ready);video.removeEventListener('seeked',request);media.classList.remove('is-ready');video.removeAttribute('src');video.load();if(blob)URL.revokeObjectURL(blob);};
   };
+  stopFilm=setupFilm();
+  reduced.addEventListener('change',()=>{stopFilm();stopFilm=setupFilm();});
+  window.addEventListener('pagehide',()=>stopFilm());
+  window.addEventListener('pageshow',e=>{if(e.persisted)stopFilm=setupFilm();});
 
-  let teardownJourney = setupScrollJourney();
-  const handleMotionChange = () => {
-    teardownJourney();
-    teardownJourney = setupScrollJourney();
+  const choices={
+    brightness:{title:'Start with balayage or highlights.',text:'Softly blended brightness or more defined ribbons of light? Explore balayage, then talk with Kyrin about your starting color and upkeep.',slug:'balayage',label:'Explore balayage'},
+    color:{title:'Make color your starting point.',text:'Depth, tone, and placement can change the whole feeling of your hair. Bring a photo and talk through the options.',slug:'color-and-highlights',label:'Explore color & highlights'},
+    shape:{title:'A new shape can change everything.',text:'Talk about the length you want to keep, the movement you like, and how you actually style your hair.',slug:'haircuts-and-styling',label:'Explore cuts & styling'},
+    volume:{title:'Start with an extension conversation.',text:'Length and fullness need a personal plan. Discuss suitability, the hair match, the investment, and the upkeep before choosing a service.',slug:'hair-extensions',label:'Explore extensions'},
+    care:{title:'Give your hair some considered care.',text:'Tell Kyrin what you notice about your hair’s feel and finish. A conversation helps identify which treatment options may fit.',slug:'hair-treatments',label:'Explore treatments'}
   };
-  reducedMotion.addEventListener?.("change", handleMotionChange);
-  window.addEventListener("pagehide", () => teardownJourney(), { once: true });
-
-  document.querySelectorAll(".service-row").forEach((row) => {
-    row.addEventListener("toggle", () => {
-      if (!row.open) return;
-      document.querySelectorAll(".service-row").forEach((other) => {
-        if (other !== row) other.open = false;
-      });
-    });
+  document.querySelector('[data-look-finder]')?.addEventListener('change',e=>{
+    const choice=choices[e.target.value];if(!choice)return;
+    const result=document.querySelector('[data-finder-result]');
+    const title=document.createElement('h3');title.textContent=choice.title;
+    const text=document.createElement('p');text.textContent=choice.text;
+    const link=document.createElement('a');link.className='text-link';link.href='/services/'+choice.slug;link.textContent=choice.label+' ↗';
+    result.replaceChildren(title,text,link);
   });
+  document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
+    let count=0;
+    document.querySelectorAll('[data-filter]').forEach(b=>{const on=b===button;b.classList.toggle('filter-active',on);b.setAttribute('aria-pressed',String(on));});
+    document.querySelectorAll('[data-portfolio-item]').forEach(item=>{item.hidden=button.dataset.filter!=='all'&&item.dataset.category!==button.dataset.filter;if(!item.hidden)count++;});
+    const status=document.querySelector('[data-filter-status]');if(status)status.textContent=count+' portfolio '+(count===1?'image':'images')+' shown';
+  }));
+  const dialog=document.querySelector('.lightbox');
+  let opener=null;
+  document.querySelectorAll('[data-lightbox]').forEach(button=>button.addEventListener('click',e=>{
+    if(!dialog || typeof dialog.showModal!=='function')return;
+    e.preventDefault();opener=button;
+    const item=button.closest('[data-portfolio-item]');
+    const img=button.querySelector('img');const target=dialog.querySelector('img');target.src=img.src;target.alt=img.alt;
+    const title=item.querySelector('h3').textContent;dialog.querySelector('h2').textContent=title;
+    dialog.querySelector('[data-lightbox-note]').textContent=item.querySelector('.portfolio-note').textContent;
+    dialog.querySelector('[data-lightbox-book]').href='/book?look='+encodeURIComponent(button.dataset.lightbox);
+    dialog.showModal();dialog.querySelector('.lightbox-close').focus();
+  }));
+  dialog?.querySelector('.lightbox-close').addEventListener('click',()=>dialog.close());
+  dialog?.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
+  dialog?.addEventListener('close',()=>opener?.focus());
 
-  const form = document.querySelector("[data-booking-form]");
-  const status = document.querySelector("[data-form-status]");
-
-  const clearErrors = () => {
-    form?.querySelectorAll("[aria-invalid='true']").forEach((field) => field.removeAttribute("aria-invalid"));
-    form?.querySelectorAll(".field-error").forEach((error) => { error.textContent = ""; });
-  };
-
-  const showFieldError = (field, message) => {
-    field.setAttribute("aria-invalid", "true");
-    const error = document.getElementById(`${field.id}-error`);
-    if (error) error.textContent = message;
-  };
-
-  form?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    clearErrors();
-    status.className = "form-status";
-    status.textContent = "";
-
-    const required = [...form.querySelectorAll("[required]")];
-    let valid = true;
-    required.forEach((field) => {
-      if (!field.value.trim()) {
-        showFieldError(field, "This field is required.");
-        valid = false;
-      } else if (field.type === "email" && !field.validity.valid) {
-        showFieldError(field, "Enter a valid email address.");
-        valid = false;
-      }
+  const form=document.querySelector('[data-booking-form]');
+  if(form){
+    const status=form.querySelector('[data-form-status]');
+    const params=new URLSearchParams(location.search);
+    const select=form.querySelector('#service');
+    const wanted=params.get('service');if(wanted&&[...select.options].some(o=>o.value===wanted))select.value=wanted;
+    const looks={'dimensional-blonde':'Dimensional blonde','brunette-dimension':'Brunette dimension','soft-layers':'Cut & color'};
+    const chosen=looks[params.get('look')];
+    if(chosen){form.querySelector('[data-inspiration]').value=chosen;const box=form.querySelector('[data-selected-inspiration]');box.hidden=false;box.textContent='Your inspiration: '+chosen;}
+    if(params.get('sent')==='1'){status.className='form-status is-success';status.textContent='Your request has been sent. Your appointment is not confirmed until Kyrin replies and a date and time are agreed.';}
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();
+      if(form.dataset.sending==='true')return;
+      form.querySelectorAll('[aria-invalid]').forEach(f=>f.removeAttribute('aria-invalid'));
+      form.querySelectorAll('.field-error').forEach(f=>f.textContent='');
+      status.className='form-status';status.textContent='';
+      const invalid=[...form.querySelectorAll('[required]')].filter(f=>!f.value.trim()||!f.validity.valid);
+      if(invalid.length){invalid.forEach(f=>{f.setAttribute('aria-invalid','true');const fieldError=form.querySelector('#'+f.id+'-error');if(fieldError)fieldError.textContent=f.type==='email'?'Enter a valid email address.':f.id==='message'?'Tell us a little more about your hair (at least 10 characters).':'Please complete this field.';});status.textContent='Please review the highlighted fields.';status.classList.add('is-error');invalid[0].focus();return;}
+      const button=form.querySelector('[type="submit"]');const buttonLabel=button.querySelector('span');
+      form.dataset.sending='true';button.disabled=true;buttonLabel.textContent='Sending your request…';status.textContent='Sending your request to Kyrin.';
+      const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),20000);
+      try{
+        const body=new FormData(form);body.delete('redirect');
+        const response=await fetch(form.action,{method:'POST',body,headers:{Accept:'application/json'},signal:controller.signal});
+        const result=await response.json();if(!response.ok||!result.success)throw new Error('Unable to send');
+        form.reset();form.querySelector('[data-selected-inspiration]').hidden=true;form.querySelector('[data-inspiration]').value='';
+        status.classList.add('is-success');status.textContent='Your request has been sent. Your appointment is not confirmed until Kyrin replies and a date and time are agreed.';
+      }catch(error){status.classList.add('is-error');status.textContent=error.name==='AbortError'?'The request timed out, so we could not confirm delivery. Please text or call 702-533-8176 before sending again.':'We could not send your request. Your details are still here. Please try again, or text or call 702-533-8176.';}
+      finally{clearTimeout(timeout);form.dataset.sending='false';button.disabled=false;buttonLabel.textContent='Send my request';}
     });
-
-    if (!valid) {
-      status.classList.add("is-error");
-      status.textContent = "Please review the highlighted fields.";
-      form.querySelector("[aria-invalid='true']")?.focus();
-      return;
-    }
-
-    const submit = form.querySelector(".submit-stamp");
-    const label = submit.querySelector("span");
-    const originalLabel = label.textContent;
-    submit.disabled = true;
-    label.textContent = "Sending";
-    status.textContent = "Sending your request to Kyrin.";
-
-    try {
-      const response = await fetch(form.action, {
-        method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" }
-      });
-      const result = await response.json();
-      if (!response.ok || !result.success) throw new Error("Request failed");
-      form.reset();
-      status.classList.add("is-success");
-      status.textContent = "Your request is on its way. Kyrin will be in touch soon.";
-    } catch {
-      status.classList.add("is-error");
-      status.textContent = "The form could not send. Please call or text 702-533-8176.";
-    } finally {
-      submit.disabled = false;
-      label.textContent = originalLabel;
-    }
-  });
-
-  const year = document.querySelector("[data-year]");
-  if (year) year.textContent = String(new Date().getFullYear());
+  }
 })();

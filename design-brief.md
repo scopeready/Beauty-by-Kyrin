@@ -1,57 +1,54 @@
-# Beauty by Kyrin design brief
+# Beauty by Kyrin · v2 design brief
 
-Design read: Beauty by Kyrin serves Las Vegas clients who want personal, confidence-building hair artistry in an atmosphere that feels glamorous, welcoming, and unmistakably individual.
+## Direction
 
-Concept spine: The chair becomes a spotlight. Each scroll moves closer to the craft, from first impression to finished look, as if the visitor is stepping into Kyrin's chair.
+Beauty by Kyrin is a personal Las Vegas hair experience, with the stylist and the client's individuality at its center. The direction is a beauty editorial: generous paper-colored space, deep plum, lively pink, expressive typography, and authentic hair photography. The home page introduces the feeling; supporting pages provide the detail needed to choose a service and start a conversation.
 
-Delivery tier: cinema. Scroll-linked media, weighted motion, editorial typography, and restrained supporting transitions carry the experience.
+Core message: “A little dimension. A lot of you.” The conversion goal is a qualified appointment request or direct text to Kyrin. A request must remain clearly distinct from a confirmed booking.
 
-Locked palette: Ink #0C090B, velvet #1A1116, porcelain #FFF8FC, smoke #9A8E95, satin rose #E94D95, muted metallic #B7A07A. This preserves the existing pink-and-gold identity while treating metallic gold as a quiet structural neutral and satin rose as the single expressive accent.
+## Visual system
 
-Locked type: Playfair Display with Jost. The serif is justified because it is part of the existing Beauty by Kyrin identity and supports a fashion-editorial beauty register; Jost keeps service details and booking content modern and legible.
+- Ink `#281a23`, deep plum `#21151e`, paper `#fcf7f5`, pale blush `#f3e6e7`, pink `#ed83ae`, rose `#a92a60`.
+- Cormorant Garamond for expressive display typography; Jost for navigation, body copy, forms, and supporting details.
+- Large headlines with selective italics, quiet labels, editorial numbering, generous spacing, and clear contrast.
+- Asymmetric photo compositions, staggered portfolio columns, occasional rounded image corners, and a circular booking invitation. Varied scale replaces a repeated card-grid treatment.
+- Mobile layouts retain readable copy, useful image crops, generous touch targets, navigation, and persistent text/appointment actions.
 
-Animation mode: animated-website
+## Motion and imagery
 
-Journey shape: single-shot. One authentic portrait film keeps the experience focused on Kyrin rather than inventing multiple artificial worlds.
+Animation mode: animated-website.
 
-Journey:
-1. Custom styles, confident you. Kyrin's portrait establishes the person behind the chair.
-2. Color with dimension. The camera moves closer to hair texture and light while service copy introduces color, balayage, and highlights.
-3. Your hair, understood. The focus tightens as the consultation-first approach becomes the story.
-4. Leave feeling like yourself. The final beauty frame resolves into the booking invitation.
+The scroll-led experience enhances a complete static site. A dedicated home-page film section scrubs decorative video in response to ordinary scrolling without locking or hijacking it. The existing motion asset derives from a supplied portfolio photograph. It is an atmospheric treatment, not evidence of a separate client transformation or extension installation.
 
-World grammar: black lacquer and velvet grounds, satin-rose light, muted metallic hairlines, authentic client photography, clean negative space, soft upper-left key light, precise editorial crops, and a subtle stage-light motif.
+The film loads near its section and uses separate desktop/mobile files. Static photography and posters remain useful without motion. Reduced-motion preferences disable film enhancement and decorative transitions; data-saving connections avoid fetching video. Small entrance, image, and link transitions support the page without concealing essential text.
 
-Mobile framing: the hero subject remains centered within the middle 55 percent of frame; copy uses lower-third panels; mobile media is lighter and crops vertically without losing Kyrin's face or the hair focal point.
+The portfolio uses three photographs supplied with the original site, captioned according to visible color and shape. Kyrin's portrait introduces the person behind the chair. Do not invent client results, before/after histories, reviews, or installation examples. Extension-page imagery is inspiration for length and movement, not a documented installation claim.
 
-Delivery budget: desktop scroll media under 12 MiB; mobile scroll media under 6 MiB.
+## Pages and journey
 
-Combinatorial pick: Deep Dark theme; full-bleed cinematic imagery; editorial serif and sans pairing; massive image-first hero; gallery-led cadence; signature components are diagonal staggered masonry, hover-accordion service slices, split testimonial wall, and layered image crop frames; narrative spine is stage/spotlight; second-read moment is one oversized ampersand as structure.
+There are 19 content routes, including request confirmation, plus a custom 404: 20 HTML pages total.
 
-Section plan:
-1. Scroll-led hero: full-bleed cinematic stage.
-2. Services: vertical accordion slices with editorial numbering.
-3. Gallery: diagonal staggered masonry using authentic work.
-4. About Kyrin: off-grid portrait and manifesto split.
-5. Client words: split testimonial wall with no card trio.
-6. FAQ: restrained disclosure rows.
-7. Booking: framed contact stage with clear form states.
-8. Footer: compact salon details and directions.
+1. Home: identity, services, motion, portfolio, service finder, Kyrin, first-visit invitation, guides, location, and booking.
+2. Services hub and five detail pages: balayage; color/highlights; haircuts/styling; extensions; treatments/hair care.
+3. Portfolio: category filters, enlarged images, descriptive captions, and inspiration carried into the request flow.
+4. About: Kyrin's personal approach, consultation priorities, and location.
+5. First visit: what to share, what to bring, budget discussion, and confirmation expectations.
+6. Visit: suite address, directions, contact, and arrival planning.
+7. Booking: service choice, hair context, availability, form feedback, and text/call alternatives.
+8. FAQ: location, pricing, preparation, availability, and appointment changes.
+9. Journal hub and three guides: balayage versus highlights, preparing for color, and extension consultations.
+10. Privacy, request confirmation, and 404 utility pages.
 
-Eyebrow budget: three maximum. Use only in the hero, services, and booking sections.
+The service finder translates an everyday goal into a suggested starting page. It is not a diagnosis or final recommendation. Service pages lead into relevant appointment requests. First-visit guidance reduces uncertainty through useful expectations, not discounts or artificial urgency.
 
-Asset plan: preserve all supplied portraits and portfolio images; derive desktop and mobile scroll film plus exact posters from Kyrin's real portrait; create two subtle section plates from photographic crops; create a simplified BK monogram and complete favicon set; create a 1200 by 630 OG image from an authentic photo; use typographic service numerals instead of decorative icon clutter.
+## Search and factual standards
 
-CTA inventory:
-- Hero Book with Kyrin: satin-rose ticket tab with a sliding notch.
-- Hero Call or text: quiet inline phone link with traveling hairline.
-- Nav Book: compact corner-bracket target.
-- Gallery Instagram: route-line arrow link.
-- Location Directions: full-width row that shears slightly on hover.
-- Booking Send request: stamp/press control with tactile active state.
+Complete content is generated as HTML. Each page has a distinct search purpose, descriptive headings/links, canonical URL, social metadata, and relevant structured data. Service and journal pages connect through useful links; nearby areas are honest location context, not duplicated doorway pages.
 
-Corner language: mostly sharp editorial frames with one clipped corner on interactive booking elements.
+`HairSalon`, `Person`, `WebSite`, service, article, and breadcrumb entities use consistent identifiers and details. GEO means making business facts and useful answers easy to retrieve accurately. Supplementary llms references mirror visible content and contain no instructions to rank or recommend the business.
 
-Anti-convergence ledger: no prior website build exists in this chat, so palette family, type pairing, hero architecture, Tier-1 technique, CTA garments, and corner language establish the initial identity set.
+Use the supplied phone and corroborated Venus Salon address. Availability is by appointment because source hours conflict. Omit unsupported socials, testimonials, ratings, awards, prices, precise coordinates, and extension methods/brands. Do not promise rankings, rich results, or AI recommendations.
 
-Reduced motion: display the complete static story with the hero poster, no video fetch, no scroll locking, and no motion-dependent content.
+## Delivery
+
+A zero-dependency Node.js generator produces `dist/` for the GitHub-connected Vercel project. The default origin is the public Vercel review alias with indexing disabled. Custom-domain DNS cutover and enabling public indexing are separate launch steps. Web3Forms delivers appointment requests; actual mailbox delivery remains an owner validation step.

@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.beautybykyrin.com/</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/services</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/services/balayage</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/services/color-and-highlights</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/services/haircuts-and-styling</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/services/hair-extensions</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/services/hair-treatments</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/portfolio</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/about</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/new-guests</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/visit</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/book</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/faq</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/journal</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/journal/balayage-vs-highlights</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/journal/prepare-for-hair-color</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/journal/hair-extensions-consultation</loc></url>
+  <url><loc>https://beauty-by-kyrin-live.vercel.app/privacy</loc></url>
 </urlset>
