@@ -66,8 +66,8 @@ export const services = [
     kicker: 'Your color, with intention',
     headline: 'Depth. Brightness. Your kind of color.',
     lede: 'What would you like to see when you look in the mirror? A richer overall shade, selected ribbons of light, or softer contrast? Beauty by Kyrin offers hair color and highlights in Las Vegas, with a consultation to connect that vision to your current hair. You do not need the perfect salon vocabulary. Describe the change you want, and bring references that help make it visible.',
-    image: '/assets/photo-04.webp',
-    alt: 'Long brunette hair with warm dimensional highlights',
+    image: '/assets/highlights-blonde-dimension.webp',
+    alt: 'Rear view of shoulder-length blonde highlights with darker dimension',
     bestFor: [
       'You want to change or refresh your overall shade and understand what the transition could involve.',
       'You want selected brightness or dimension without assuming every section of hair needs the same treatment.',
@@ -174,8 +174,8 @@ export const services = [
     kicker: 'More possibility, thoughtfully planned',
     headline: 'The length you imagine. A plan that fits.',
     lede: 'Hair extensions can be a conversation about length, fullness, or both. Beauty by Kyrin offers extension consultations in Las Vegas to help connect your desired look with your current hair and daily routine. The first decision is not simply how long to go. It is whether the proposed look, care requirements and ongoing appointments make sense for you. Share your inspiration, ask direct questions, and leave the planning stage with a clear understanding of the service before committing.',
-    image: '/assets/photo-04.webp',
-    alt: 'Long dimensional brunette hairstyle showing length and movement',
+    image: '/assets/extensions-blonde.webp',
+    alt: 'Long blonde hair extensions styled in loose waves',
     bestFor: [
       'You want to explore added length and understand what is needed to blend it with the haircut you have now.',
       'You are interested in more fullness and would like to discuss whether extensions are suitable for your hair.',
@@ -283,8 +283,8 @@ export const guides = [
     category: 'The color conversation',
     readTime: '5 minute read',
     dek: 'Choose the effect you want before you choose the technique. Balayage and traditional highlights can both create dimension; the right plan depends on your starting hair, desired brightness and maintenance preferences.',
-    image: '/assets/photo-02.webp',
-    alt: 'Long blonde hair with a blend of lighter and deeper tones',
+    image: '/assets/highlights-blonde-waves.webp',
+    alt: 'Smiling client with blonde highlights and face-framing waves',
     sections: [
       {
         heading: 'The useful difference is in the placement',
@@ -354,8 +354,8 @@ export const guides = [
     category: 'Before the appointment',
     readTime: '5 minute read',
     dek: 'The most useful preparation is clear communication: show where your hair is now, explain where you want to go and share what has been done to it. You do not need to arrive with the technical solution.',
-    image: '/assets/photo-04.webp',
-    alt: 'Long brunette hair with dimensional highlights and loose waves',
+    image: '/assets/color-burgundy.webp',
+    alt: 'Back view of long burgundy hair color styled in waves',
     sections: [
       {
         heading: 'Start with a current picture of your hair',
@@ -425,8 +425,8 @@ export const guides = [
     category: 'The extension decision',
     readTime: '5 minute read',
     dek: 'A good extension decision considers more than the finished length. Use the consultation to understand suitability, blending, the option being proposed and the time and budget needed after the first appointment.',
-    image: '/assets/photo-04.webp',
-    alt: 'Long brunette hairstyle with dimensional color and flowing waves',
+    image: '/assets/extensions-highlights-blonde.webp',
+    alt: 'Long blonde extensions and highlights shown from the back in soft waves',
     sections: [
       {
         heading: 'Define whether you want length, fullness or both',

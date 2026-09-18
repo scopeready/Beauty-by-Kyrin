@@ -38,9 +38,9 @@ const websiteId = absolute('/#website');
 const ogImage = absolute('/assets/og-image.jpg');
 const business = {
   '@type': 'HairSalon', '@id': businessId,
-  name: site.name, url: absolute('/'), telephone: site.telephone,
+  name: site.name, url: absolute('/'), telephone: site.telephone, email: site.email,
   description: 'Independent hair stylist in Las Vegas offering personalized haircuts, color, balayage, highlights, extensions and hair treatments. Appointments are arranged directly with Kyrin.',
-  image: [ogImage, absolute('/assets/kyrin-portrait.webp')],
+  image: [ogImage, absolute(site.portrait.src)],
   address: {'@type':'PostalAddress', streetAddress:site.address, addressLocality:site.locality, addressRegion:site.region, postalCode:site.postalCode, addressCountry:'US'},
   founder: {'@id':personId},
   areaServed: {'@type':'City', name:'Las Vegas'},
@@ -66,7 +66,7 @@ function schema(page) {
   const crumbs = breadcrumb(page);
   const webPage = {'@type':pageType, '@id':`${url}#webpage`, url, name:page.title, description:page.description, inLanguage:'en-US', isPartOf:{'@id':websiteId}, about:{'@id':businessId}, primaryImageOfPage:{'@type':'ImageObject', url:absolute(page.service?.image || page.guide?.image || '/assets/og-image.jpg')}};
   if (crumbs) webPage.breadcrumb = {'@id':crumbs['@id']};
-  const graph = [business, {'@type':'Person','@id':personId,name:site.person,jobTitle:'Hair stylist',worksFor:{'@id':businessId},url:absolute('/about'),image:absolute('/assets/kyrin-portrait.webp')}, {'@type':'WebSite','@id':websiteId,url:absolute('/'),name:site.name,inLanguage:'en-US',publisher:{'@id':businessId}}, webPage];
+  const graph = [business, {'@type':'Person','@id':personId,name:site.person,jobTitle:'Hair stylist',worksFor:{'@id':businessId},url:absolute('/about'),image:absolute(site.portrait.src)}, {'@type':'WebSite','@id':websiteId,url:absolute('/'),name:site.name,inLanguage:'en-US',publisher:{'@id':businessId}}, webPage];
   if (crumbs) graph.push(crumbs);
   if (page.service) {
     const serviceId = `${url}#service`;

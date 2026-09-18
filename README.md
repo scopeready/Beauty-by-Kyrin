@@ -49,7 +49,7 @@ The existing Vercel project is connected to the repository. Use `npm run build`,
 
 The review site permits crawling so crawlers can see `noindex`; `robots.txt` does not block those directives. Confirmation and error pages remain excluded from indexing.
 
-Custom-domain launch is separate. No SiteGround DNS cutover is part of this build. When the domain is ready to move, configure it and redirects in Vercel, preserve email DNS records, set `SITE_URL=https://www.beautybykyrin.com` and `INDEX_SITE=true`, redeploy, and check canonical URLs and sitemap before search submission. Environment settings alone do not change DNS.
+The public project `beauty-by-kyrin` is live at `https://www.beautybykyrin.com`; the apex redirects permanently to www. Its production environment sets `SITE_URL=https://www.beautybykyrin.com` and `INDEX_SITE=true`. The separate `beauty-by-kyrin-live` review project remains noindex. The owner changed DNS; the site update does not change DNS or email records.
 
 ## Appointment requests
 
@@ -57,7 +57,13 @@ The form uses the existing Web3Forms endpoint and client access key supplied wit
 
 JavaScript provides validation and sending/success/failure states; failed requests preserve entered details. Native form submission provides a fallback, with a static `/thank-you` receipt page. A request is not a confirmed appointment: Kyrin must agree on the service, date, and time directly. No payment is collected.
 
-Do not send unsolicited test requests during automated checks. The owner should later make one clearly labeled submission and verify receipt, reply routing, spam filtering, and the current Web3Forms destination before custom-domain launch. Mailbox delivery has not been verified by this build.
+Do not send unsolicited test requests during automated checks. The owner should make one clearly labeled submission and verify receipt, reply routing, spam filtering, and the current Web3Forms destination. Kyrin's confirmed contact email is `kyrinweidauer@gmail.com`. The Web3Forms recipient is configured with that provider, not determined by a client-side email field. Mailbox delivery has not been verified by this build.
+
+## September photo update
+
+The portfolio contains ten real client photographs, including seven newly supplied color, highlights and extension images. File labels determine service categories; the combined extensions/highlights photo appears in both filters. Client images are resized/encoded as WebP without creative retouching. Full-photo dialogs retain the entire image. Inspiration requests include the unique look title and portfolio link.
+
+`kyrin-cutout-v2.webp` is a transparent-background edit of the newly supplied `Kyrin.jpg`, made with the built-in image editor. Portrait layouts preserve its aspect ratio and full head. Original source photos remain untouched. New assets use new filenames; stylesheet and script references are versioned `v=3`.
 
 ## Content and search integrity
 

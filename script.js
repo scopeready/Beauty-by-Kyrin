@@ -76,7 +76,7 @@
   document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
     let count=0;
     document.querySelectorAll('[data-filter]').forEach(b=>{const on=b===button;b.classList.toggle('filter-active',on);b.setAttribute('aria-pressed',String(on));});
-    document.querySelectorAll('[data-portfolio-item]').forEach(item=>{item.hidden=button.dataset.filter!=='all'&&item.dataset.category!==button.dataset.filter;if(!item.hidden)count++;});
+    document.querySelectorAll('[data-portfolio-item]').forEach(item=>{item.hidden=button.dataset.filter!=='all'&&!item.dataset.category.split(' ').includes(button.dataset.filter);if(!item.hidden)count++;});
     const status=document.querySelector('[data-filter-status]');if(status)status.textContent=count+' portfolio '+(count===1?'image':'images')+' shown';
   }));
   const dialog=document.querySelector('.lightbox');
@@ -101,9 +101,10 @@
     const params=new URLSearchParams(location.search);
     const select=form.querySelector('#service');
     const wanted=params.get('service');if(wanted&&[...select.options].some(o=>o.value===wanted))select.value=wanted;
-    const looks={'dimensional-blonde':'Dimensional blonde','brunette-dimension':'Brunette dimension','soft-layers':'Cut & color'};
-    const chosen=looks[params.get('look')];
-    if(chosen){form.querySelector('[data-inspiration]').value=chosen;const box=form.querySelector('[data-selected-inspiration]');box.hidden=false;box.textContent='Your inspiration: '+chosen;}
+    const looks=JSON.parse(form.dataset.lookOptions||'{}');
+    const requestedLook=params.get('look');
+    const chosen=Object.hasOwn(looks,requestedLook)?looks[requestedLook]:null;
+    if(chosen){form.querySelector('[data-inspiration]').value=chosen;form.querySelector('[data-inspiration-url]').value=new URL('/portfolio#'+encodeURIComponent(requestedLook),location.origin).href;const box=form.querySelector('[data-selected-inspiration]');box.hidden=false;box.textContent='Your inspiration: '+chosen;}
     if(params.get('sent')==='1'){status.className='form-status is-success';status.textContent='Your request has been sent. Your appointment is not confirmed until Kyrin replies and a date and time are agreed.';}
     form.addEventListener('submit',async e=>{
       e.preventDefault();
@@ -120,7 +121,7 @@
         const body=new FormData(form);body.delete('redirect');
         const response=await fetch(form.action,{method:'POST',body,headers:{Accept:'application/json'},signal:controller.signal});
         const result=await response.json();if(!response.ok||!result.success)throw new Error('Unable to send');
-        form.reset();form.querySelector('[data-selected-inspiration]').hidden=true;form.querySelector('[data-inspiration]').value='';
+        form.reset();form.querySelector('[data-selected-inspiration]').hidden=true;form.querySelector('[data-inspiration]').value='';form.querySelector('[data-inspiration-url]').value='';
         status.classList.add('is-success');status.textContent='Your request has been sent. Your appointment is not confirmed until Kyrin replies and a date and time are agreed.';
       }catch(error){status.classList.add('is-error');status.textContent=error.name==='AbortError'?'The request timed out, so we could not confirm delivery. Please text or call 702-533-8176 before sending again.':'We could not send your request. Your details are still here. Please try again, or text or call 702-533-8176.';}
       finally{clearTimeout(timeout);form.dataset.sending='false';button.disabled=false;buttonLabel.textContent='Send my request';}

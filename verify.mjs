@@ -1,6 +1,8 @@
 import { readFile, access, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { runInNewContext } from 'node:vm';
+import { site, portfolio } from './site-config.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const productionAudit = process.argv.includes('--production-audit');
@@ -84,6 +86,7 @@ for (const [route, html] of files) {
     const graph = data['@graph'] || [data];
     check(graph.some(node => node['@type'] === 'HairSalon'), `${route}: missing HairSalon entity`);
     check(graph.some(node => node['@type'] === 'WebSite'), `${route}: missing WebSite entity`);
+    check(graph.some(node => node['@type'] === 'Person' && node.image === `${manifest.origin}/assets/kyrin-cutout-v2.webp`), `${route}: Person schema does not use Kyrin’s updated portrait`);
     check(graph.filter(node => node['@type'] === 'HairSalon').every(node => node['@id'] === `${manifest.origin}/#business`), `${route}: inconsistent business entity ID`);
     if (route !== '/' && route !== '/404') check(graph.some(node => node['@type'] === 'BreadcrumbList'), `${route}: missing breadcrumbs`);
     const structuredUrls = [];
@@ -135,6 +138,97 @@ for (const [route, html] of files) {
     if (tag.attr.srcset) for (const candidate of tag.attr.srcset.split(',')) await localReference(candidate.trim().split(/\s+/)[0], route, 'responsive asset');
     for (const [key,value] of Object.entries(tag.attr)) if (/^data-(desktop|mobile)(?:-src|-poster)?$/.test(key)) await localReference(value, route, 'media');
   }
+}
+
+// Photo regressions exercise the generated pages and the shipped interaction
+// code; source config supplies identity and captions, never the deployment host.
+const portfolioHtml = files.get('/portfolio') || '';
+const homeHtml = files.get('/') || '';
+const bookingHtml = files.get('/book') || '';
+const expectedPhotos = ['color-burgundy.webp','highlights-blonde-dimension.webp','extensions-blonde.webp','color-brunette-bob.webp','color-brunette-waves.webp','extensions-highlights-blonde.webp','highlights-blonde-waves.webp'];
+const cards = [...portfolioHtml.matchAll(/<div\b([^>]*\bdata-portfolio-item\b[^>]*)>([\s\S]*?)<\/div>/g)].map(match => ({attr:attributes(`<div${match[1]}>`),body:match[2]}));
+check(cards.length === 10, 'Portfolio must render all 10 photograph cards');
+check(portfolio.length === 10 && new Set(portfolio.map(photo => photo.id)).size === 10, 'Portfolio identities must be unique and complete');
+for (const photo of expectedPhotos) check(cards.some(card => tags(card.body,'img').some(image => image.attr.src === `/assets/${photo}`)), `Portfolio missing new photograph ${photo}`);
+
+async function webpSize(src) {
+  const data = await readFile(path.join(dist, src.replace(/^\//,'')));
+  if (data.toString('ascii',0,4) !== 'RIFF' || data.toString('ascii',8,12) !== 'WEBP') throw new Error(`Not a WebP image: ${src}`);
+  for (let offset = 12; offset + 8 <= data.length;) {
+    const type = data.toString('ascii',offset,offset + 4);
+    const size = data.readUInt32LE(offset + 4);
+    const start = offset + 8;
+    if (start + size > data.length) break;
+    if (type === 'VP8X' && size >= 10) return {width:data.readUIntLE(start + 4,3) + 1,height:data.readUIntLE(start + 7,3) + 1};
+    if (type === 'VP8 ' && size >= 10) return {width:data.readUInt16LE(start + 6) & 0x3fff,height:data.readUInt16LE(start + 8) & 0x3fff};
+    if (type === 'VP8L' && size >= 5) {const bits = data.readUInt32LE(start + 1);return {width:(bits & 0x3fff) + 1,height:((bits >>> 14) & 0x3fff) + 1};}
+    offset = start + size + (size % 2);
+  }
+  throw new Error(`No supported WebP dimensions found: ${src}`);
+}
+for (const photo of portfolio) {
+  const card = cards.find(candidate => candidate.attr.id === photo.id);
+  check(Boolean(card), `Portfolio missing card identity ${photo.id}`);
+  const image = card && tags(card.body,'img')[0]?.attr;
+  check(image?.src === photo.src && image?.alt === photo.alt, `Portfolio photo/alt mismatch for ${photo.id}`);
+  try {
+    const actual = await webpSize(photo.src);
+    check(actual.width === photo.width && actual.height === photo.height, `Config dimensions differ from actual photograph ${photo.id}`);
+    check(Number(image?.width) === actual.width && Number(image?.height) === actual.height, `Rendered dimensions differ from photograph ${photo.id}`);
+  } catch (error) {check(false,error.message);}
+}
+const featured = portfolio.filter(photo => photo.featured);
+const homeWork = homeHtml.match(/<section\b[^>]*\bid=["']work["'][^>]*>([\s\S]*?)<\/section>/i)?.[1] || '';
+check(featured.length === 3 && tags(homeWork,'figure').length === 3, 'Homepage must feature exactly three portfolio photographs');
+for (const photo of featured) check(tags(homeWork,'img').some(image => image.attr.src === photo.src && image.attr.alt === photo.alt), `Homepage featured photograph/alt mismatch for ${photo.id}`);
+const filterValues = tags(portfolioHtml,'button').filter(button => 'data-filter' in button.attr).map(button => button.attr['data-filter']);
+check(filterValues.length === 5 && ['all','color','highlights','extensions','cuts'].every(value => filterValues.includes(value)), 'Portfolio filter options are incomplete');
+const combinedCard = cards.find(card => card.attr.id === 'blonde-extensions-highlights');
+check(['highlights','extensions'].every(value => combinedCard?.attr['data-category'].split(/\s+/).includes(value)), 'Combined extensions/highlights photo must have both categories');
+for (const route of ['/','/about']) {
+  const html = files.get(route) || '';
+  check(!html.includes('/assets/kyrin-portrait.webp'), `${route}: old portrait remains in generated output`);
+  check(tags(html,'img').some(image => image.attr.src === site.portrait.src && image.attr.alt === site.portrait.alt && Number(image.attr.width) === site.portrait.width && Number(image.attr.height) === site.portrait.height), `${route}: updated visible portrait or its dimensions are missing`);
+}
+check(site.portrait.src === '/assets/kyrin-cutout-v2.webp', 'Portrait config points to the old photograph');
+try {const actual = await webpSize(site.portrait.src);check(actual.width === site.portrait.width && actual.height === site.portrait.height,'Portrait config dimensions differ from its actual image');} catch (error) {check(false,error.message);}
+
+const bookingForm = tags(bookingHtml,'form').find(form => 'data-look-options' in form.attr);
+let lookOptions = {};
+try {lookOptions = JSON.parse(bookingForm?.attr['data-look-options'] || '{}');} catch {check(false,'Booking photo options are not valid JSON');}
+check(Object.keys(lookOptions).length === portfolio.length, 'Booking photo options must include all portfolio identities');
+check(new Set(Object.values(lookOptions)).size === portfolio.length, 'Booking photo descriptions must uniquely identify the selected photograph');
+for (const photo of portfolio) check(typeof lookOptions[photo.id] === 'string' && lookOptions[photo.id].includes(photo.label) && lookOptions[photo.id].includes(photo.title), `Booking inspiration loses the exact label or unique title for ${photo.id}`);
+check(tags(bookingHtml,'input').some(input => input.attr.name === 'inspiration_url' && input.attr.type === 'hidden'), 'Booking form must submit a separate inspiration URL');
+
+const interactionCode = await readFile(path.join(dist,'script.js'),'utf8');
+const filterStart = interactionCode.indexOf("document.querySelectorAll('[data-filter]')");
+const filterEnd = interactionCode.indexOf('const dialog=',filterStart);
+check(filterStart >= 0 && filterEnd > filterStart, 'Portfolio filter setup was not found for the interaction regression');
+if (filterStart >= 0 && filterEnd > filterStart) {
+  const nodes = cards.map(card => ({id:card.attr.id,dataset:{category:card.attr['data-category']},hidden:false}));
+  const buttons = filterValues.map(filter => ({dataset:{filter},classList:{toggle(){}},setAttribute(){},addEventListener(event,handler){this.click=handler;}}));
+  const status = {textContent:''};
+  const document = {querySelectorAll:selector => selector === '[data-filter]' ? buttons : selector === '[data-portfolio-item]' ? nodes : [],querySelector:() => status};
+  try {
+    runInNewContext(interactionCode.slice(filterStart,filterEnd),{document},{timeout:1000});
+    for (const filter of ['highlights','extensions']) {buttons.find(button => button.dataset.filter === filter)?.click();check(nodes.find(node => node.id === 'blonde-extensions-highlights')?.hidden === false, `Combined photo is hidden by the ${filter} filter`);}
+    buttons.find(button => button.dataset.filter === 'cuts')?.click();check(nodes.find(node => node.id === 'blonde-extensions-highlights')?.hidden === true,'Combined photo incorrectly appears in Cuts & shape');
+    buttons.find(button => button.dataset.filter === 'all')?.click();check(nodes.every(node => !node.hidden),'All the work does not restore every photograph');
+  } catch (error) {check(false,`Portfolio interaction regression: ${error.message}`);}
+}
+const inspirationStart = interactionCode.indexOf('const params=new URLSearchParams(location.search);');
+const inspirationEnd = interactionCode.indexOf("form.addEventListener('submit'",inspirationStart);
+check(inspirationStart >= 0 && inspirationEnd > inspirationStart,'Booking inspiration setup was not found for the interaction regression');
+if (inspirationStart >= 0 && inspirationEnd > inspirationStart) for (const photo of portfolio) {
+  const fields = {'#service':{options:[]},'[data-inspiration]':{value:''},'[data-inspiration-url]':{value:''},'[data-selected-inspiration]':{hidden:true,textContent:''}};
+  const form = {dataset:{lookOptions:JSON.stringify(lookOptions)},querySelector:selector => fields[selector]};
+  try {
+    runInNewContext(interactionCode.slice(inspirationStart,inspirationEnd),{form,status:{},location:{origin:manifest.origin,search:`?look=${encodeURIComponent(photo.id)}`},URL,URLSearchParams},{timeout:1000});
+    check(fields['[data-inspiration]'].value === lookOptions[photo.id], `Booking changes the exact inspiration description for ${photo.id}`);
+    check(fields['[data-inspiration-url]'].value === `${manifest.origin}/portfolio#${photo.id}`, `Booking loses the selected photograph URL for ${photo.id}`);
+    check(fields['[data-selected-inspiration]'].hidden === false && fields['[data-selected-inspiration]'].textContent.includes(lookOptions[photo.id]), `Booking does not display selected inspiration for ${photo.id}`);
+  } catch (error) {check(false,`Booking inspiration regression for ${photo.id}: ${error.message}`);}
 }
 
 const sitemap = await readFile(path.join(dist,'sitemap.xml'), 'utf8');
