@@ -37,6 +37,11 @@ jobs:
       - name: Syntax-check browser and template code
         run: node --check script.js && node --check templates.mjs
 
+      # The booking endpoint is the revenue path: validation, spam handling and
+      # rate limiting are asserted directly, with delivery stubbed out.
+      - name: Test the booking endpoint
+        run: npm run test:api
+
       - name: Build
         run: npm run build
 

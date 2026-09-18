@@ -9,10 +9,11 @@
     "images": "node scripts/images.mjs",
     "typecheck": "tsc --noEmit",
     "verify": "node verify.mjs",
-    "check": "node --check script.js && node --check templates.mjs && npm run typecheck && node build.mjs && node verify.mjs",
+    "check": "node --check script.js && node --check templates.mjs && npm run typecheck && npm run test:api && node build.mjs && node verify.mjs",
     "test": "npm run check",
     "audit:production": "node build.mjs --production-audit && node scripts/audit.mjs",
-    "og": "node scripts/og.mjs"
+    "og": "node scripts/og.mjs",
+    "test:api": "node scripts/test-book-api.mjs"
   },
   "engines": {
     "node": ">=20"
