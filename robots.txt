@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.beautybykyrin.com/sitemap.xml
+
+# AI and LLM discovery
+# https://www.beautybykyrin.com/llms.txt
+# https://www.beautybykyrin.com/llms-full.txt
