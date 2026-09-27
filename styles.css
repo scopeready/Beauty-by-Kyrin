@@ -87,3 +87,5 @@ picture{display:contents}
    and they need to reach 24px of hit area. */
 .footer-bottom a{display:inline-flex;align-items:center;min-height:24px}
 .booking-email{display:inline-flex;align-items:center;min-height:24px}
+.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:40px}.testimonial{margin:0;padding:32px 30px;background:var(--paper);border-top:2px solid var(--pink);display:flex;flex-direction:column;justify-content:space-between;gap:22px}.pale-panel .testimonial{background:#fff}.testimonial blockquote{margin:0}.testimonial blockquote p{font:500 22px/1.35 var(--display);letter-spacing:-.01em;margin:0}.testimonial figcaption{font-size:12px;letter-spacing:.12em;text-transform:uppercase}.testimonial figcaption::before{content:"— "}.social-links{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:13px;margin:14px 0}.social-links a{text-decoration:underline;text-underline-offset:3px}.social-links a:hover{color:var(--pink)}.footer-social{font-size:12px}
+@media(max-width:900px){.testimonial-grid{grid-template-columns:1fr;gap:18px}.testimonial blockquote p{font-size:20px}}

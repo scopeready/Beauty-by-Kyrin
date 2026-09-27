@@ -57,8 +57,8 @@ PUBLISH_DRAFTS=true npm run build   # include unpublished journal drafts
 getting one wrong is legal or reputational, not cosmetic.
 
 - **No fabricated reviews.** `AggregateRating` and `Review` may never appear.
-  `testimonials` in `site-config.mjs` is empty; the section renders only when it
-  is not. Inventing reviews breaks FTC rules and can get a Google Business
+  `testimonials` in `site-config.mjs` holds only client words Kyrin supplied
+  with permission; they render as plain quotes with no review markup. Inventing reviews breaks FTC rules and can get a Google Business
   Profile suspended.
 - **No unverified facts in structured data.** `geo`, `sameAs` and
   `hasCredential` are each gated on their config being filled in. A guessed

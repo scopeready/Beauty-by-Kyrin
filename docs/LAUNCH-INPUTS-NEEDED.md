@@ -1,5 +1,15 @@
 # Launch inputs still needed
 
+> **Update (Sept 2026) — answers received from Kyrin:**
+> Suite 128 confirmed · pricing stays unpublished (her choice) · no booking
+> platform: requests come via the consultation form, call/text, or Instagram DM ·
+> Instagram and TikTok are both @BeautyByKyrin (now in `sameAs`) · three client
+> testimonials published with permission · a new balayage photo added to the
+> portfolio · accepting all new clients.
+> **Still open:** Nevada cosmetology license number (being collected — never
+> invent one), Google Business Profile status, years of experience / school /
+> product lines, deposit and cancellation policy, Facebook/Yelp.
+
 Every unanswered item from Section A of the build brief, with where it plugs in
 and what it unlocks. **Nothing here is blocking a deploy** — the site is built so
 each value drops in without a rewrite, and anything unfilled is omitted rather

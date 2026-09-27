@@ -155,10 +155,10 @@ for (const [route, html] of files) {
 const portfolioHtml = files.get('/portfolio') || '';
 const homeHtml = files.get('/') || '';
 const bookingHtml = files.get('/book') || '';
-const expectedPhotos = ['color-burgundy.webp','highlights-blonde-dimension.webp','extensions-blonde.webp','color-brunette-bob.webp','color-brunette-waves.webp','extensions-highlights-blonde.webp','highlights-blonde-waves.webp'];
+const expectedPhotos = ['color-burgundy.webp','highlights-blonde-dimension.webp','extensions-blonde.webp','color-brunette-bob.webp','color-brunette-waves.webp','extensions-highlights-blonde.webp','highlights-blonde-waves.webp','brunette-balayage-waves.webp'];
 const cards = [...portfolioHtml.matchAll(/<div\b([^>]*\bdata-portfolio-item\b[^>]*)>([\s\S]*?)<\/div>/g)].map(match => ({attr:attributes(`<div${match[1]}>`),body:match[2]}));
-check(cards.length === 10, 'Portfolio must render all 10 photograph cards');
-check(portfolio.length === 10 && new Set(portfolio.map(photo => photo.id)).size === 10, 'Portfolio identities must be unique and complete');
+check(cards.length === portfolio.length, `Portfolio must render all ${portfolio.length} photograph cards`);
+check(portfolio.length >= 10 && new Set(portfolio.map(photo => photo.id)).size === portfolio.length, 'Portfolio identities must be unique and complete');
 for (const photo of expectedPhotos) check(cards.some(card => tags(card.body,'img').some(image => image.attr.src === `/assets/${photo}`)), `Portfolio missing new photograph ${photo}`);
 
 async function webpSize(src) {

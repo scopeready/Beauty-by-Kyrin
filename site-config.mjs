@@ -54,18 +54,25 @@ export const site = {
   ],
   hoursNote: 'Monday to Friday, 9:00am–5:00pm. Weekends by appointment.',
   availability: 'By appointment. Contact Kyrin for availability.',
+  // Confirmed by the owner: Kyrin is accepting new clients.
+  acceptingNewClients: true,
 
   // --- Unverified: every one of these renders as "omitted" while empty ------
   // Filling any of them in is the whole of that feature's launch work.
-  bookingUrl: env('NEXT_PUBLIC_BOOKING_URL'),      // A5 — blank: CTAs stay "Request an Appointment"
+  // A5 — confirmed: no booking platform. Guests request through the form,
+  // a call or text, or an Instagram DM. CTAs stay "Request an Appointment".
+  bookingUrl: env('NEXT_PUBLIC_BOOKING_URL'),
   depositRequired: '',                              // A5
-  instagram: '',                                    // A6 — blank: icon and sameAs omitted
-  tiktok: '',                                       // A6
+  // A6 — confirmed by the owner: @BeautyByKyrin on both.
+  instagram: 'https://www.instagram.com/beautybykyrin/',
+  instagramHandle: '@BeautyByKyrin',
+  tiktok: 'https://www.tiktok.com/@beautybykyrin',
+  tiktokHandle: '@BeautyByKyrin',
   facebook: '',                                     // A6
   yelp: '',                                         // A6
   googleBusinessProfileUrl: '',                     // A9
   googleReviewUrl: env('NEXT_PUBLIC_GBP_REVIEW_URL'), // A9 — blank: review button hidden
-  // A2 — blank: the licence line and the hasCredential schema are both omitted.
+  // A2 — still being collected from Kyrin. Blank: the licence line and the hasCredential schema are both omitted.
   // Never invent a licence number.
   license: { number: '', type: '', display: false },
   // A7 — blank: About is written from what is confirmed.
@@ -97,7 +104,12 @@ export const site = {
 /** Real, attributable reviews only. Empty means the reviews section and
  *  AggregateRating are both omitted site-wide. Fabricating one of these
  *  violates FTC rules and can get a Google Business Profile suspended. */
-export const testimonials = [];
+export const testimonials = [
+  // Supplied by Kyrin with permission to publish (A7). First names only.
+  {name:'Jennifer',quote:'I get SO MANY compliments after Kyrin does my hair!! I have tried many stylists in the area but drive from Henderson to Summerlin to have her do it. She is magical!'},
+  {name:'Ashley',quote:'I love this salon! Kyrin is a wonderful stylist and everyone is so friendly! The decor is so fabulous! 10/10 recommend✨'},
+  {name:'Laurie',quote:'Kyrin has been doing my hair for almost 1 year now, she does a wonderful job!'},
+];
 
 /** Policies Kyrin has actually agreed to. An entry only appears on /policies
  *  once it is confirmed; nothing here is invented on her behalf. */
@@ -112,7 +124,7 @@ export const policies = {
 
 export const generalFaqs = [
   {q:'Where is Beauty by Kyrin?', a:'Beauty by Kyrin is inside Venus Salon at 8665 W Flamingo Rd, Suite 128, Las Vegas, NV 89147, near Flamingo Road and Durango Drive. Kyrin works by appointment from this location, and guests travel from across the Las Vegas valley including Spring Valley, Summerlin and Henderson. Use the directions link on the Visit page to plan your route.'},
-  {q:'How do I request an appointment?', a:'Send an appointment request through the form on this website, or call or text Kyrin directly at 702-533-8176. Tell her the service you have in mind, what your hair is like now, and the days that suit you. Your appointment is confirmed only after Kyrin replies and you agree on a date and time together.'},
+  {q:'How do I request an appointment?', a:'Send an appointment request through the consultation form on this website, call or text Kyrin directly at 702-533-8176, or send a message on Instagram to @BeautyByKyrin. Tell her the service you have in mind, what your hair is like now, and the days that suit you. Your appointment is confirmed only after Kyrin replies and you agree on a date and time together.'},
   {q:'What if I do not know which service to choose?', a:'Choose “Help me choose” on the appointment request form and describe what you would like to change in your own words. You do not need to know salon terminology such as balayage, foils or toner. Describing your current hair, the result you are picturing and your at-home routine is more than enough to start the conversation.'},
   {q:'How much will my appointment cost?', a:'Ask Kyrin for a personalized quote before your service is agreed. Hair pricing is not one flat number: your starting color, hair history, length and density, the result you want, and whether extension hair is needed all change the work involved. Discuss both the appointment and the ongoing upkeep so there are no surprises.'},
   {q:'What should I bring to a consultation?', a:'Bring two or three reference photos and be ready to say what you like about each one. Also bring your hair history: previous salon color, box color, lightening, keratin or perms, and any extensions. Photos show a direction, but your hair history determines what is actually achievable and how long it will take.'},
@@ -121,6 +133,7 @@ export const generalFaqs = [
   {q:'Are appointments available on weekends?', a:'Contact Kyrin for current availability and share the days that work for you. Venus Salon’s general hours are Monday to Friday, 9:00am to 5:00pm, with weekends by appointment. Kyrin’s individual schedule is arranged directly with each guest, so the salon’s posted hours do not necessarily reflect when she is taking appointments.'},
   {q:'How do I change or cancel an appointment?', a:'Contact Kyrin directly at 702-533-8176 as soon as your plans change, so the time can be offered to someone else. Ask about the current rescheduling and cancellation terms when your appointment is arranged, as these are agreed with Kyrin directly rather than set by this website.'},
   {q:'Do you take walk-ins?', a:'No. Beauty by Kyrin is appointment-only, which is what makes a proper consultation possible before any color or cutting begins. Send a request through this website or text 702-533-8176 and Kyrin will find a time. Even a quick question about your hair is worth a message rather than a drive across town.'},
+  {q:'Is Kyrin accepting new clients?', a:'Yes. Kyrin is currently accepting new clients for color, highlights, balayage, cuts, extensions and treatments. Start with the consultation form on this website, a call or text to 702-533-8176, or a message on Instagram to @BeautyByKyrin. Share what your hair is like now and what you would love to change, and Kyrin will follow up about timing and a quote.'},
 ];
 
 export const portfolio = [
@@ -133,5 +146,6 @@ export const portfolio = [
   {id:'blonde-highlights-waves',title:'A brighter frame.',label:'Blonde highlights',category:'highlights',src:'/assets/highlights-blonde-waves.webp',width:1200,height:1600,alt:'Smiling client with blonde highlights and face-framing waves',service:'color-and-highlights',note:'Blonde highlights shown from the front. Bring this photo if you want to discuss brightness around your face and the overall blonde tone.'},
   {id:'dimensional-blonde',title:'Light, with a little depth.',label:'Dimensional blonde',category:'color',src:'/assets/photo-02.webp',alt:'Long blonde hair with darker roots and softly blended highlights from Kyrin’s portfolio',width:900,height:1255,service:'balayage',note:'Soft blonde contrast with a deeper root. Bring this photo if you like brightness that still has dimension.'},
   {id:'brunette-dimension',title:'Brunette, but make it luminous.',label:'Brunette dimension',category:'color',src:'/assets/photo-04.webp',alt:'Long brunette hair with warm face-framing highlights from Kyrin’s portfolio',width:900,height:1200,service:'color-and-highlights',note:'Warm ribbons around the face bring contrast to a rich brunette base. Talk through how much brightness feels right for you.'},
+  {id:'brunette-balayage-waves',title:'Soft light, lived-in depth.',label:'Brunette balayage',category:'color highlights',src:'/assets/brunette-balayage-waves.webp',width:1200,height:1600,alt:'Side profile of long brunette hair with soft caramel balayage and loose waves, photographed at Venus Salon',service:'balayage',note:'Brunette balayage with caramel ribbons and a soft, grown-out root. Bring this photo if you want brightness that blends and stays easy between visits.'},
   {id:'soft-layers',title:'A shape that goes with you.',label:'Cut & color',category:'cuts',src:'/assets/photo-03.webp',alt:'Shoulder-length layered hair with highlights and a softly styled finish from Kyrin’s portfolio',width:900,height:1200,service:'haircuts-and-styling',note:'A shorter, layered silhouette with visible color dimension. Use it as a starting point for discussing length, movement, and styling.'},
 ];
